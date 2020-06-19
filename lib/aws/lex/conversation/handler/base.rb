@@ -12,8 +12,9 @@ module Aws
             self.options = opts[:options]
           end
 
-          def will_handle?(_conversation)
-            false
+          def will_respond?(conversation)
+            callable = options.fetch(:respond_on) { ->(_c) { false } }
+            callable.call(conversation)
           end
 
           def response(_conversation)
@@ -21,7 +22,7 @@ module Aws
           end
 
           def handle(conversation)
-            return response(conversation) if will_handle?(conversation)
+            return response(conversation) if will_respond?(conversation)
             return unless successor # end of chain - return nil
 
             successor.handle(conversation)

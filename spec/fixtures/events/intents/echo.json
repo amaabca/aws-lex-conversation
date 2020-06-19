@@ -2,7 +2,9 @@
   "messageVersion": "1.0",
   "invocationSource": "DialogCodeHook",
   "userId": "user",
-  "sessionAttributes": {},
+  "sessionAttributes": {
+    "key": "value"
+  },
   "requestAttributes": null,
   "bot": {
     "name": "Test",

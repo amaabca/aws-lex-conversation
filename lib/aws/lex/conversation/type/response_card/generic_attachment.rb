@@ -1,0 +1,24 @@
+module Aws
+  module Lex
+    class Conversation
+      module Type
+        class ResponseCard
+          class GenericAttachment
+            include Base
+
+            required :title
+            required :buttons
+
+            optional :sub_title
+            optional :image_url
+            optional :attachment_link_url
+
+            coerce(
+              buttons: Array[Button]
+            )
+          end
+        end
+      end
+    end
+  end
+end

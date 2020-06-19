@@ -5,11 +5,18 @@ require_relative 'conversation/base'
 module Aws
   module Lex
     class Conversation
-      attr_accessor :event, :context
+      include Support::Responses
+
+      attr_accessor :event, :context, :lex
 
       def initialize(opts = {})
         self.event = opts.fetch(:event)
         self.context = opts.fetch(:context)
+        self.lex = Type::Event.shrink_wrap(event)
+      end
+
+      def chain
+        @chain ||= []
       end
 
       def handlers=(list)
@@ -27,16 +34,20 @@ module Aws
         @chain = reversed.reverse
       end
 
-      def respond
-        chain.first.handle(self)
-      end
-
       def handlers
         chain.map(&:class)
       end
 
-      def chain
-        @chain ||= []
+      def respond
+        chain.first.handle(self)
+      end
+
+      def slots
+        lex.current_intent.slots
+      end
+
+      def session
+        lex.session_attributes
       end
     end
   end

@@ -5,21 +5,17 @@ module Aws
     class Conversation
       module Handler
         class Echo < Base
-          def will_handle?(_conversation)
-            true
-          end
-
           def response(conversation)
-            {
-              dialogAction: {
-                type: 'Close',
-                fulfillmentState: 'Fulfilled',
-                message: {
-                  contentType: 'PlainText',
-                  content: conversation.event['inputTranscript'].to_s
-                }
-              }
-            }
+            content = options.fetch(:content) { conversation.lex.input_transcript }
+            content_type = options.fetch(:content_type) { Type::Message::ContentType.new('PlainText') }
+            fulfillment_state = options.fetch(:fulfillment_state) { Type::FulfillmentState.new('Fulfilled') }
+            conversation.close(
+              fulfillment_state: fulfillment_state,
+              message: Type::Message.new(
+                content: content,
+                content_type: content_type
+              )
+            )
           end
         end
       end
