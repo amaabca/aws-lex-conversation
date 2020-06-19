@@ -1,0 +1,35 @@
+{
+  "messageVersion": "1.0",
+  "invocationSource": "DialogCodeHook",
+  "userId": "user",
+  "sessionAttributes": {},
+  "requestAttributes": null,
+  "bot": {
+    "name": "Test",
+    "alias": "$LATEST",
+    "version": "$LATEST"
+  },
+  "outputDialogMode": "Text",
+  "currentIntent": {
+    "name": "Lex_Intent_Echo",
+    "slots": {},
+    "slotDetails": {},
+    "confirmationStatus": "None"
+  },
+  "inputTranscript": "Echo Test",
+  "recentIntentSummaryView": [
+    {
+      "intentName": "Lex_Intent_Echo",
+      "checkpointLabel": null,
+      "slots": {},
+      "confirmationStatus": "None",
+      "dialogActionType": "Delegate",
+      "fulfillmentState": null,
+      "slotToElicit": null
+    }
+  ],
+  "sentimentResponse": {
+    "sentimentLabel": "NEUTRAL",
+    "sentimentScore": "{Positive: 0.028460732,Negative: 0.0038302848,Neutral: 0.9676958,Mixed: 1.3306875E-5}"
+  }
+}

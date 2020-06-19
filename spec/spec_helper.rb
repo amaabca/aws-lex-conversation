@@ -1,14 +1,22 @@
 # frozen_string_literal: true
 
+require 'ostruct'
+require 'securerandom'
 require 'bundler/setup'
-require 'aws/lex/conversation'
+require 'pry'
+require 'aws-lex-conversation'
+require 'factory_bot'
+
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
-  # Enable flags like --only-failures and --next-failure
+  config.include(FactoryBot::Syntax::Methods)
+  config.include(Helpers::Fixtures)
   config.example_status_persistence_file_path = '.rspec_status'
 
-  # Disable RSpec exposing methods globally on `Module` and `main`
-  config.disable_monkey_patching!
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
