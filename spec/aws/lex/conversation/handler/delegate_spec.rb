@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Aws::Lex::Conversation::Handler::Delegate do
   let(:lambda_context) { build(:context) }
   let(:event) { parse_fixture('events/intents/all_properties.json') }

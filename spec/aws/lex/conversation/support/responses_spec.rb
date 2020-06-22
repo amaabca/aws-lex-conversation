@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Aws::Lex::Conversation::Support::Responses do
   let(:klass) { Struct.new(:lex).include(described_class) }
   let(:event) { parse_fixture('events/intents/all_properties.json') }

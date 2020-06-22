@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Aws
   module Lex
     class Conversation
@@ -73,6 +75,7 @@ module Aws
               params = { from: from }.merge(opts)
 
               attr_accessor(attribute)
+
               mapping[attribute] = from
               translate(attribute => params)
             end

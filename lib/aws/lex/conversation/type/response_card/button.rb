@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Aws
   module Lex
     class Conversation
@@ -5,7 +7,7 @@ module Aws
         class ResponseCard
           class Button
             include Base
-            
+
             required :text
             required :value
           end

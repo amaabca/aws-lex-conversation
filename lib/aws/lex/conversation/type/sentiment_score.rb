@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Aws
   module Lex
     class Conversation
@@ -13,9 +15,9 @@ module Aws
           class << self
             def parse_string(str)
               parts = str
-                .gsub(/[\{\}]/, '') # remove '{' or '}' chars
-                .split(',')         # break into components
-                .map { |c| c.gsub(/\s/, '').split(':') }
+                      .gsub(/[{}]/, '') # remove '{' or '}' chars
+                      .split(',') # break into components
+                      .map { |c| c.gsub(/\s/, '').split(':') }
 
               params = parts.each_with_object({}) do |part, hash|
                 label = part.first

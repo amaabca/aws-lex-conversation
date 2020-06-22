@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Aws::Lex::Conversation::Handler::Base do
   let(:successor) { Aws::Lex::Conversation::Handler::Echo.new(successor: nil, options: {}) }
   subject { described_class.new(successor: successor, options: {}) }

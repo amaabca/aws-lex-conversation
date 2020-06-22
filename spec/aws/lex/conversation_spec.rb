@@ -68,9 +68,9 @@ describe Aws::Lex::Conversation do
 
     it 'contains the classes of each handler' do
       expect(subject.handlers).to eq([
-        Aws::Lex::Conversation::Handler::Echo,
-        Aws::Lex::Conversation::Handler::Delegate
-      ])
+                                       Aws::Lex::Conversation::Handler::Echo,
+                                       Aws::Lex::Conversation::Handler::Delegate
+                                     ])
     end
   end
 

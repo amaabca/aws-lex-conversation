@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Aws
   module Lex
     class Conversation
@@ -13,8 +15,8 @@ module Aws
             # shamelessly borrowed from ActiveSupport
             input
               .gsub(/::/, '/')
-              .gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
-              .gsub(/([a-z\d])([A-Z])/,'\1_\2')
+              .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+              .gsub(/([a-z\d])([A-Z])/, '\1_\2')
               .tr('-', '_')
               .gsub(/\W/, '_')
               .downcase

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Aws::Lex::Conversation::Type::CurrentIntent do
   describe '.slot_details!' do
     subject { described_class.slot_details!.call(value) }

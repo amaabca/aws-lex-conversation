@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Aws::Lex::Conversation::Response::Base do
   describe '#dialog_action' do
     it 'raises NotImplementedError' do

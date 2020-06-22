@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Aws
   module Lex
     class Conversation
@@ -24,11 +26,11 @@ module Aws
             def enumeration(value)
               enumerations << value
               snake_case = Support::Inflector.new(value).to_snake_case
-              class_eval <<~RUBY
-                def #{snake_case}?
-                  raw.casecmp('#{value}').zero?
-                end
-              RUBY
+              class_eval(
+                "def #{snake_case}?; raw.casecmp('#{value}').zero?; end",
+                __FILE__,
+                __LINE__ - 2
+              )
             end
 
             def enumerations

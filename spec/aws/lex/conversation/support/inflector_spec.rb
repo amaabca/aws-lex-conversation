@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Aws::Lex::Conversation::Support::Inflector do
   subject { described_class.new(input) }
 
