@@ -50,6 +50,10 @@ module Aws
           end
 
           module ClassMethods
+            def integer!
+              ->(v) { v.to_i }
+            end
+
             def symbolize_hash!
               ->(v) { v.transform_keys(&:to_sym) }
             end

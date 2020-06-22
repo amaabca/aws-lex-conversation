@@ -18,7 +18,7 @@ module Aws
           end
 
           def response(_conversation)
-            raise ArgumentError, 'define #response in a subclass'
+            raise NotImplementedError, 'define #response in a subclass'
           end
 
           def handle(conversation)

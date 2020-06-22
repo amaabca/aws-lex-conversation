@@ -15,7 +15,7 @@ module Aws
             {
               type: 'ElicitIntent',
               message: message,
-              response_card: response_card
+              responseCard: response_card
             }.reject { |_, v| v.nil? }
           end
         end

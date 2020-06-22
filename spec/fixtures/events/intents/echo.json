@@ -14,8 +14,15 @@
   "outputDialogMode": "Text",
   "currentIntent": {
     "name": "Lex_Intent_Echo",
-    "slots": {},
-    "slotDetails": {},
+    "slots": {
+      "one": "1"
+    },
+    "slotDetails": {
+      "one": {
+        "resolutions": [],
+        "originalValue": "1"
+      }
+    },
     "confirmationStatus": "None"
   },
   "inputTranscript": "Echo Test",
@@ -23,11 +30,13 @@
     {
       "intentName": "Lex_Intent_Echo",
       "checkpointLabel": null,
-      "slots": {},
+      "slots": {
+        "one": null
+      },
       "confirmationStatus": "None",
-      "dialogActionType": "Delegate",
+      "dialogActionType": "ElicitSlot",
       "fulfillmentState": null,
-      "slotToElicit": null
+      "slotToElicit": "one"
     }
   ],
   "sentimentResponse": {

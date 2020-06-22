@@ -11,7 +11,7 @@ module Aws
           end
 
           def dialog_action
-            raise ArgumentError, 'define dialog_action in a subclass'
+            raise NotImplementedError, 'define dialog_action in a subclass'
           end
 
           def to_lex

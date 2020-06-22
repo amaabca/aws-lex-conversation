@@ -6,9 +6,7 @@ module Aws
           class ContentType
             include Enumeration
 
-            enumeration('PlainText')
-            enumeration('SSML')
-            enumeration('CustomPayload')
+            enumeration('application/vnd.amazonaws.card.generic')
           end
         end
       end

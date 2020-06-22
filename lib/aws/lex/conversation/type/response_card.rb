@@ -10,7 +10,7 @@ module Aws
           required :generic_attachments
 
           coerce(
-            version: ->(v) { v.to_i },
+            version: integer!,
             content_type: ResponseCard::ContentType,
             generic_attachments: Array[GenericAttachment]
           )

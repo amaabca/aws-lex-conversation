@@ -16,7 +16,7 @@ module Aws
 
           def dialog_action
             {
-              type: 'ConfirmIntent',
+              type: 'ElicitSlot',
               intentName: intent_name,
               slots: slots,
               slotToElicit: slot_to_elicit,

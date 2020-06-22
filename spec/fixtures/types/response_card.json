@@ -1,0 +1,24 @@
+{
+  "responseCard": {
+    "version": 1,
+    "contentType": "application/vnd.amazonaws.card.generic",
+    "genericAttachments": [
+      {
+        "title": "Title",
+        "subTitle": "Sub Title",
+        "imageUrl": "https://example.com/image.jpg",
+        "attachmentLinkUrl": "https://example.com/attachment.json",
+        "buttons": [
+          {
+            "text": "Yes",
+            "value": "true"
+          },
+          {
+            "text": "No",
+            "value": "false"
+          }
+        ]
+      }
+    ]
+  }
+}
