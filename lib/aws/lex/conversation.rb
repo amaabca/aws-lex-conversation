@@ -42,6 +42,10 @@ module Aws
         chain.first.handle(self)
       end
 
+      def intent_name
+        lex.current_intent.name
+      end
+
       def slots
         lex.current_intent.slots
       end

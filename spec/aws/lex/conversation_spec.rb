@@ -67,10 +67,17 @@ describe Aws::Lex::Conversation do
     end
 
     it 'contains the classes of each handler' do
-      expect(subject.handlers).to eq([
-                                       Aws::Lex::Conversation::Handler::Echo,
-                                       Aws::Lex::Conversation::Handler::Delegate
-                                     ])
+      handlers = [
+        Aws::Lex::Conversation::Handler::Echo,
+        Aws::Lex::Conversation::Handler::Delegate
+      ]
+      expect(subject.handlers).to eq(handlers)
+    end
+  end
+
+  describe '#intent_name' do
+    it 'returns the name of the current intent' do
+      expect(subject.intent_name).to eq('Lex_Intent_Echo')
     end
   end
 
