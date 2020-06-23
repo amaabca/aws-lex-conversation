@@ -2,8 +2,8 @@
 
 module Aws
   module Lex
-    module Conversation
-      VERSION = '0.1.0'
+    class Conversation
+      VERSION = '0.5.0'
     end
   end
 end

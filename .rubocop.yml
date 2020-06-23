@@ -1,0 +1,29 @@
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.7
+  NewCops: enable
+  Exclude:
+    - 'bin/**/*'
+    - 'vendor/**/*'
+Documentation:
+  Enabled: false
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+Metrics/ClassLength:
+  Max: 150
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - '*.gemspec'
+Metrics/LineLength:
+  Max: 130
+Metrics/MethodLength:
+  Max: 25
+Naming/FileName:
+  Enabled: true
+  Exclude:
+    - lib/aws-lex-conversation.rb
+Style/Lambda:
+  EnforcedStyle: literal
+Style/GuardClause:
+  Enabled: false

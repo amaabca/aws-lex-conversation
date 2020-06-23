@@ -1,0 +1,46 @@
+{
+  "messageVersion": "1.0",
+  "invocationSource": "DialogCodeHook",
+  "userId": "user",
+  "sessionAttributes": {
+    "key": "value"
+  },
+  "requestAttributes": null,
+  "bot": {
+    "name": "Test",
+    "alias": "$LATEST",
+    "version": "$LATEST"
+  },
+  "outputDialogMode": "Text",
+  "currentIntent": {
+    "name": "Lex_Intent_Echo",
+    "slots": {
+      "one": "1"
+    },
+    "slotDetails": {
+      "one": {
+        "resolutions": [],
+        "originalValue": "1"
+      }
+    },
+    "confirmationStatus": "None"
+  },
+  "inputTranscript": "Echo Test",
+  "recentIntentSummaryView": [
+    {
+      "intentName": "Lex_Intent_Echo",
+      "checkpointLabel": null,
+      "slots": {
+        "one": null
+      },
+      "confirmationStatus": "None",
+      "dialogActionType": "ElicitSlot",
+      "fulfillmentState": null,
+      "slotToElicit": "one"
+    }
+  ],
+  "sentimentResponse": {
+    "sentimentLabel": "NEUTRAL",
+    "sentimentScore": "{Positive: 0.028460732,Negative: 0.0038302848,Neutral: 0.9676958,Mixed: 1.3306875E-5}"
+  }
+}
