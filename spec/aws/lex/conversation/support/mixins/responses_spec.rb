@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Aws::Lex::Conversation::Support::Responses do
+describe Aws::Lex::Conversation::Support::Mixins::Responses do
   let(:klass) { Struct.new(:lex).include(described_class) }
   let(:event) { parse_fixture('events/intents/all_properties.json') }
   let(:lex) { Aws::Lex::Conversation::Type::Event.shrink_wrap(event) }

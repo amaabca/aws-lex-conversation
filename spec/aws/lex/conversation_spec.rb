@@ -83,7 +83,11 @@ describe Aws::Lex::Conversation do
 
   describe '#slots' do
     it 'returns the slot values of the input event' do
-      expect(subject.slots).to eq(one: '1')
+      expect(subject.slots[:one].value).to eq('1')
+    end
+
+    it 'contains Slot objects' do
+      expect(subject.slots[:one]).to be_an(Aws::Lex::Conversation::Type::Slot)
     end
   end
 
