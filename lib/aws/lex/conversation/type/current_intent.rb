@@ -13,6 +13,17 @@ module Aws
           required :confirmation_status
 
           class << self
+            def slots!
+              ->(v) do
+                v.each_with_object({}) do |(key, value), hash|
+                  hash[key.to_sym] = Slot.shrink_wrap(
+                    name: key,
+                    value: value
+                  )
+                end
+              end
+            end
+
             def slot_details!
               ->(v) do
                 v.each_with_object({}) do |(key, value), hash|
@@ -23,7 +34,7 @@ module Aws
           end
 
           coerce(
-            slots: symbolize_hash!,
+            slots: slots!,
             slot_details: slot_details!,
             confirmation_status: ConfirmationStatus
           )

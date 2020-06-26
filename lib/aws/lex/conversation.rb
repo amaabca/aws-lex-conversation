@@ -5,7 +5,7 @@ require_relative 'conversation/base'
 module Aws
   module Lex
     class Conversation
-      include Support::Responses
+      include Support::Mixins::Responses
 
       attr_accessor :event, :context, :lex
 
