@@ -8,22 +8,23 @@ module Aws
           include Base
 
           required :name
-          required :slots
+          required :raw_slots, from: :slots, virtual: true
           required :slot_details
           required :confirmation_status
 
-          class << self
-            def slots!
-              ->(v) do
-                v.each_with_object({}) do |(key, value), hash|
-                  hash[key.to_sym] = Slot.shrink_wrap(
-                    name: key,
-                    value: value
-                  )
-                end
-              end
+          computed_property :slots, ->(instance) do
+            instance.raw_slots.each_with_object({}) do |(key, value), hash|
+              hash[key.to_sym] = Slot.shrink_wrap(
+                name: key,
+                value: value,
+                # pass a reference to the parent down to the slot so that each slot
+                # instance can view a broader scope such as slot_details/resolutions
+                current_intent: instance
+              )
             end
+          end
 
+          class << self
             def slot_details!
               ->(v) do
                 v.each_with_object({}) do |(key, value), hash|
@@ -34,7 +35,6 @@ module Aws
           end
 
           coerce(
-            slots: slots!,
             slot_details: slot_details!,
             confirmation_status: ConfirmationStatus
           )
