@@ -11,6 +11,10 @@ module Aws
           required :name
           required :value
 
+          def as_json(_opts = {})
+            to_lex
+          end
+
           def to_lex
             value
           end
