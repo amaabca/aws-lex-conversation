@@ -19,7 +19,8 @@ module Aws
 
           module InstanceMethods
             def assign_attributes!(opts = {})
-              self.class.attributes.each do |attribute|
+              attributes = self.class.attributes | self.class.virtual_attributes
+              attributes.each do |attribute|
                 instance_variable_set("@#{attribute}", opts[attribute])
               end
             end
@@ -60,6 +61,17 @@ module Aws
               ->(v) { v.transform_keys(&:to_sym) }
             end
 
+            def computed_property(attribute, callable)
+              mapping[attribute] = attribute
+              attr_writer(attribute)
+
+              # dynamically memoize the result
+              define_method(attribute) do
+                instance_variable_get("@#{attribute}") ||
+                  instance_variable_set("@#{attribute}", callable.call(self))
+              end
+            end
+
             def required(attribute, opts = {})
               property(attribute, opts.merge(allow_nil: false))
             end
@@ -76,12 +88,21 @@ module Aws
 
               attr_accessor(attribute)
 
-              mapping[attribute] = from
+              if opts.fetch(:virtual) { false }
+                virtual_attributes << attribute
+              else
+                mapping[attribute] = from
+              end
+
               translate(attribute => params)
             end
 
             def attributes
               @attributes ||= mapping.keys
+            end
+
+            def virtual_attributes
+              @virtual_attributes ||= []
             end
 
             def mapping
