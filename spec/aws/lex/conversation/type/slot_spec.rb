@@ -31,6 +31,15 @@ describe Aws::Lex::Conversation::Type::Slot do
     end
   end
 
+  describe '#as_json' do
+    let(:name) { :resolvable }
+    let(:value) { 'test' }
+
+    it 'returns the slot value' do
+      expect(subject.as_json).to eq(value)
+    end
+  end
+
   describe '#resolve!' do
     let(:name) { :resolvable }
     let(:value) { 'one two' }
