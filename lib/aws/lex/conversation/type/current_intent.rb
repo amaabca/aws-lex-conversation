@@ -26,10 +26,12 @@ module Aws
 
           class << self
             def slot_details!
-              ->(v) do
-                v.each_with_object({}) do |(key, value), hash|
-                  hash[key.to_sym] = SlotDetail.shrink_wrap(value)
-                end
+              ->(val) do
+                val
+                  .reject { |_, v| v.nil? }
+                  .each_with_object({}) do |(key, value), hash|
+                    hash[key.to_sym] = SlotDetail.shrink_wrap(value)
+                  end
               end
             end
           end
