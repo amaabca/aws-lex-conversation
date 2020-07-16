@@ -58,13 +58,13 @@ The first handler that returns `true` for the `will_respond?` method will provid
 ```ruby
 class SayHello < Aws::Lex::Conversation::Handler::Base
   def will_respond?(conversation)
-    conversation.lex.incovation_source.dialog_code_hook? && # callback is for DialogCodeHook (i.e. validation)
+    conversation.lex.invocation_source.dialog_code_hook? && # callback is for DialogCodeHook (i.e. validation)
     conversation.lex.current_intent.name == 'SayHello' &&   # Lex has routed to the 'SayHello' intent
-    conversation.slots[:name]                               # our expected slot value is set
+    conversation.slots[:name].filled?                       # our expected slot value is set
   end
 
   def response(conversation)
-    name = conversation.slots[:name]
+    name = conversation.slots[:name].value
 
     # NOTE: you can use the Type::* classes if you wish. The final output
     # will be normalized to a value that complies with the Lex response format.
