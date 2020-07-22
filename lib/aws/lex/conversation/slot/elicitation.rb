@@ -45,7 +45,11 @@ module Aws
           end
 
           def elicitation_content
-            first_elicitation? ? message : follow_up_message
+            first_elicitation? ? compose_message(message) : compose_message(follow_up_message)
+          end
+
+          def compose_message(msg)
+            msg.is_a?(Proc) ? msg.call(conversation) : msg
           end
 
           def increment_slot_elicitations!
