@@ -81,6 +81,12 @@ describe Aws::Lex::Conversation do
     end
   end
 
+  describe '#intent_confidence' do
+    it 'returns an instance of Aws::Lex::Conversation::Type::IntentConfidence' do
+      expect(subject.intent_confidence).to be_an(Aws::Lex::Conversation::Type::IntentConfidence)
+    end
+  end
+
   describe '#slots' do
     it 'returns the slot values of the input event' do
       expect(subject.slots[:one].value).to eq('1')

@@ -9,6 +9,14 @@ Documentation:
   Enabled: false
 Gemspec/RequiredRubyVersion:
   Enabled: false
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Layout/SpaceAroundOperators:
+  Enabled: false
+Metrics/AbcSize:
+  Max: 18
 Metrics/ClassLength:
   Max: 150
 Metrics/BlockLength:
@@ -26,4 +34,6 @@ Naming/FileName:
 Style/Lambda:
   EnforcedStyle: literal
 Style/GuardClause:
+  Enabled: false
+Style/SlicingWithRange:
   Enabled: false

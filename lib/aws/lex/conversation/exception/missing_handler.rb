@@ -3,7 +3,10 @@
 module Aws
   module Lex
     class Conversation
-      VERSION = '2.0.0'
+      module Exception
+        class MissingHandler < StandardError
+        end
+      end
     end
   end
 end

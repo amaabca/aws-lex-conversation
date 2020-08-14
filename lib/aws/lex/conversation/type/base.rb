@@ -53,8 +53,12 @@ module Aws
           end
 
           module ClassMethods
-            def integer!
-              ->(v) { v.to_i }
+            def integer!(nilable: false)
+              nilable ? ->(v) { v&.to_i } : ->(v) { v.to_i }
+            end
+
+            def float!(nilable: false)
+              nilable ? ->(v) { v&.to_f } : ->(v) { v.to_f }
             end
 
             def symbolize_hash!

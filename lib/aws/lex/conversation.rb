@@ -42,6 +42,10 @@ module Aws
         chain.first.handle(self)
       end
 
+      def intent_confidence
+        @intent_confidence ||= Type::IntentConfidence.new(event: lex)
+      end
+
       def intent_name
         lex.current_intent.name
       end

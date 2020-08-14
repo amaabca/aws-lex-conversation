@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory(
     :current_intent,
-    class: Aws::Lex::Conversation::Type::CurrentIntent
+    class: Aws::Lex::Conversation::Type::Intent
   ) do
     name { 'TestIntent' }
     raw_slots { { resolvable: 'one two', unresolvable: 'value', empty: nil } }

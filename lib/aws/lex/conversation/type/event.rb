@@ -7,6 +7,7 @@ module Aws
         class Event
           include Base
 
+          required :alternative_intents, default: -> { [] }
           required :current_intent
           required :bot
           required :user_id
@@ -20,8 +21,13 @@ module Aws
           optional :sentiment_response
           optional :kendra_response
 
+          computed_property :intents, ->(instance) do
+            [instance.current_intent] | instance.alternative_intents
+          end
+
           coerce(
-            current_intent: CurrentIntent,
+            alternative_intents: Array[Intent],
+            current_intent: Intent,
             bot: Bot,
             invocation_source: InvocationSource,
             output_dialog_mode: OutputDialogMode,
