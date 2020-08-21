@@ -4,13 +4,14 @@ module Aws
   module Lex
     class Conversation
       module Type
-        class CurrentIntent
+        class Intent
           include Base
 
           required :name
           required :raw_slots, from: :slots, virtual: true
           required :slot_details
           required :confirmation_status
+          optional :nlu_intent_confidence_score
 
           computed_property :slots, ->(instance) do
             instance.raw_slots.each_with_object({}) do |(key, value), hash|
@@ -38,7 +39,8 @@ module Aws
 
           coerce(
             slot_details: slot_details!,
-            confirmation_status: ConfirmationStatus
+            confirmation_status: ConfirmationStatus,
+            nlu_intent_confidence_score: float!(nilable: true)
           )
         end
       end

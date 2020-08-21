@@ -141,6 +141,34 @@ conversation.handlers = [
 conversation.respond # => { dialogAction: { type: 'Delegate' } }
 ```
 
+### `Aws::Lex::Conversation::Handler::SlotResolution`
+
+This handler will set all slot values equal to their top resolution in the input event. The handler then calls the next handler in the chain for a response.
+
+**NOTE:** This handler must not be the final handler in the chain. An exception of type `Aws::Lex::Conversation::Exception::MissingHandler` will be raised if there is no successor handler.
+
+| Option           | Required | Description                                                  | Default Value                       |
+|------------------|----------|--------------------------------------------------------------|-------------------------------------|
+| respond_on       | No       | A callable that provides the condition for `will_handle?`.   | `->(c) { true }`                   |
+
+i.e.
+
+```ruby
+conversation = Aws::Lex::Conversation.new(event: event, context: context)
+conversation.handlers = [
+  {
+    handler: Aws::Lex::Conversation::Handler::SlotResolution
+  },
+  {
+    handler: Aws::Lex::Conversation::Handler::Delegate,
+    options: {
+      respond_on: ->(c) { true }
+    }
+  }
+]
+conversation.respond # => { dialogAction: { type: 'Delegate' } }
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

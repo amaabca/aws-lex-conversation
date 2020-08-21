@@ -9,7 +9,7 @@ module Aws
 
           def initialize(opts = {})
             self.successor = opts[:successor]
-            self.options = opts[:options]
+            self.options = opts[:options] || {}
           end
 
           def will_respond?(conversation)
