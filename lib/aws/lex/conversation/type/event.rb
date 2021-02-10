@@ -7,6 +7,7 @@ module Aws
         class Event
           include Base
 
+          required :active_contexts, default: -> { [] }
           required :alternative_intents, default: -> { [] }
           required :current_intent
           required :bot
@@ -26,6 +27,7 @@ module Aws
           end
 
           coerce(
+            active_contexts: Array[Context],
             alternative_intents: Array[Intent],
             current_intent: Intent,
             bot: Bot,

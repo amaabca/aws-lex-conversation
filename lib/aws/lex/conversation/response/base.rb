@@ -5,11 +5,16 @@ module Aws
     class Conversation
       module Response
         class Base
-          attr_accessor :session_attributes, :recent_intent_summary_view
+          attr_accessor(
+            :active_contexts,
+            :recent_intent_summary_view,
+            :session_attributes
+          )
 
           def initialize(opts = {})
-            self.session_attributes = opts[:session_attributes]
+            self.active_contexts = opts[:active_contexts]
             self.recent_intent_summary_view = opts[:recent_intent_summary_view]
+            self.session_attributes = opts[:session_attributes]
           end
 
           def dialog_action
@@ -18,9 +23,10 @@ module Aws
 
           def to_lex
             Type::Response.new(
-              session_attributes: session_attributes,
+              active_contexts: active_contexts,
+              dialog_action: dialog_action,
               recent_intent_summary_view: recent_intent_summary_view,
-              dialog_action: dialog_action
+              session_attributes: session_attributes
             ).to_lex
           end
         end

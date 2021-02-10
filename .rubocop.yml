@@ -31,6 +31,8 @@ Naming/FileName:
   Enabled: true
   Exclude:
     - lib/aws-lex-conversation.rb
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
 Style/Lambda:
   EnforcedStyle: literal
 Style/GuardClause:
