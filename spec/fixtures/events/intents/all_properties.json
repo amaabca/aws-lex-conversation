@@ -7,16 +7,24 @@
     },
     "slotDetails": {
       "slot-one": {
-        "resolutions" : [
-          { "value": "1" },
-          { "value": "one" }
+        "resolutions": [
+          {
+            "value": "1"
+          },
+          {
+            "value": "one"
+          }
         ],
         "originalValue": "One"
       },
       "slot-two": {
-        "resolutions" : [
-          { "value": "2" },
-          { "value": "two" }
+        "resolutions": [
+          {
+            "value": "2"
+          },
+          {
+            "value": "two"
+          }
         ],
         "originalValue": "Two"
       }
@@ -34,30 +42,42 @@
   "outputDialogMode": "Text",
   "messageVersion": "1.0",
   "sessionAttributes": {
-     "one": "1",
-     "two": "2"
+    "one": "1",
+    "two": "2"
   },
   "requestAttributes": {
-     "one": "1",
-     "two": "2"
+    "one": "1",
+    "two": "2"
   },
   "recentIntentSummaryView": [
     {
-        "intentName": "MyName",
-        "checkpointLabel": "Label",
-        "slots": {
-          "slot-one": "one",
-          "slot-two": null
-        },
-        "confirmationStatus": "None",
-        "dialogActionType": "ElicitSlot",
-        "fulfillmentState": null,
-        "slotToElicit": "slot-two"
+      "intentName": "MyName",
+      "checkpointLabel": "Label",
+      "slots": {
+        "slot-one": "one",
+        "slot-two": null
+      },
+      "confirmationStatus": "None",
+      "dialogActionType": "ElicitSlot",
+      "fulfillmentState": null,
+      "slotToElicit": "slot-two"
     }
   ],
-   "sentimentResponse": {
-      "sentimentLabel": "NETUTRAL",
-      "sentimentScore": "{Positive: 0.028460732,Negative: 0.0038302848,Neutral: 0.9676958,Mixed: 1.3306875E-5}"
-   },
-   "kendraResponse": {}
+  "sentimentResponse": {
+    "sentimentLabel": "NETUTRAL",
+    "sentimentScore": "{Positive: 0.028460732,Negative: 0.0038302848,Neutral: 0.9676958,Mixed: 1.3306875E-5}"
+  },
+  "kendraResponse": {},
+  "activeContexts": [
+    {
+      "timeToLive": {
+        "timeToLiveInSeconds": 60,
+        "turnsToLive": 5
+      },
+      "name": "test",
+      "parameters": {
+        "slot-one": "one"
+      }
+    }
+  ]
 }

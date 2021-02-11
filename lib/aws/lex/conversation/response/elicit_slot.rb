@@ -24,7 +24,7 @@ module Aws
               slotToElicit: slot_to_elicit,
               message: message,
               responseCard: response_card
-            }.reject { |_, v| v.nil? }
+            }.compact
           end
         end
       end

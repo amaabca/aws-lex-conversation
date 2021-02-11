@@ -20,7 +20,7 @@ module Aws
               slots: slots,
               kendraQueryRequestPayload: kendra_query_request_payload,
               kendraQueryFilterString: kendra_query_filter_string
-            }.reject { |_, v| v.nil? }
+            }.compact
           end
         end
       end

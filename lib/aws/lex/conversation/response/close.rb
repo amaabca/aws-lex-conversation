@@ -20,7 +20,7 @@ module Aws
               fulfillmentState: fulfillment_state,
               message: message,
               responseCard: response_card
-            }.reject { |_, v| v.nil? }
+            }.compact
           end
         end
       end

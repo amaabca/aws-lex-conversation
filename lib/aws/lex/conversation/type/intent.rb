@@ -29,7 +29,7 @@ module Aws
             def slot_details!
               ->(val) do
                 val
-                  .reject { |_, v| v.nil? }
+                  .compact
                   .each_with_object({}) do |(key, value), hash|
                     hash[key.to_sym] = SlotDetail.shrink_wrap(value)
                   end

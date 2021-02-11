@@ -8,5 +8,5 @@ gem 'factory_bot'
 gem 'pry'
 gem 'rake'
 gem 'rspec'
-gem 'rubocop', '0.85.1'
+gem 'rubocop', '~> 1.9', require: false
 gem 'simplecov'
