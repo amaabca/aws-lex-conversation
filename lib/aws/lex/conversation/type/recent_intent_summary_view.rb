@@ -11,10 +11,10 @@ module Aws
           required :slots
           required :confirmation_status
           required :dialog_action_type
-          required :slot_to_elicit
 
-          optional :fulfillment_state
           optional :checkpoint_label
+          optional :fulfillment_state
+          optional :slot_to_elicit
 
           coerce(
             slots: symbolize_hash!,
@@ -22,6 +22,47 @@ module Aws
             dialog_action_type: DialogActionType,
             fulfillment_state: FulfillmentState
           )
+
+          # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+          def restore(conversation, opts = {})
+            case dialog_action_type.raw
+            when 'Close'
+              conversation.close(
+                fulfillment_state: opts.fetch(:fulfillment_state) { fulfillment_state },
+                message: opts.fetch(:message),
+                response_card: opts[:response_card]
+              )
+            when 'ConfirmIntent'
+              conversation.confirm_intent(
+                intent_name: intent_name,
+                message: opts.fetch(:message),
+                response_card: opts[:response_card],
+                slots: slots
+              )
+            when 'Delegate'
+              conversation.delegate(
+                kendra_query_request_payload: opts[:kendra_query_request_payload],
+                kendra_query_filter_string: opts[:kendra_query_filter_string],
+                slots: slots
+              )
+            when 'ElicitIntent'
+              conversation.elicit_intent(
+                message: opts.fetch(:message),
+                response_card: opts[:response_card]
+              )
+            when 'ElicitSlot'
+              conversation.elicit_slot(
+                intent_name: intent_name,
+                message: opts.fetch(:message),
+                response_card: opts[:response_card],
+                slots: slots,
+                slot_to_elicit: slot_to_elicit
+              )
+            else
+              raise ArgumentError, "invalid DialogActionType: `#{dialog_action_type.raw}`"
+            end
+          end
+          # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
         end
       end
     end

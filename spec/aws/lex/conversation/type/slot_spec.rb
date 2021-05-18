@@ -31,6 +31,32 @@ describe Aws::Lex::Conversation::Type::Slot do
     end
   end
 
+  describe '#blank?' do
+    context 'it has a nil value' do
+      let(:value) { nil }
+
+      it 'returns true' do
+        expect(subject.blank?).to eq(true)
+      end
+    end
+
+    context 'it has a blank value' do
+      let(:value) { '' }
+
+      it 'returns false' do
+        expect(subject.blank?).to eq(true)
+      end
+    end
+
+    context 'it has a value' do
+      let(:value) { '1' }
+
+      it 'returns false' do
+        expect(subject.blank?).to eq(false)
+      end
+    end
+  end
+
   describe '#as_json' do
     let(:name) { :resolvable }
     let(:value) { 'test' }
@@ -122,6 +148,22 @@ describe Aws::Lex::Conversation::Type::Slot do
       it 'contains no resolution data' do
         expect(subject.details.resolutions).to be_empty
       end
+    end
+  end
+
+  describe '#value=' do
+    let(:value) { 'eggo' }
+
+    before(:each) do
+      subject.value = 'waffles'
+    end
+
+    it 'updates the value instance variable' do
+      expect(subject.value).to eq('waffles')
+    end
+
+    it 'updates the value in raw_slots' do
+      expect(subject.current_intent.raw_slots[subject.name]).to eq('waffles')
     end
   end
 end

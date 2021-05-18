@@ -23,6 +23,15 @@ module Aws
             value.to_s != ''
           end
 
+          def blank?
+            !filled?
+          end
+
+          def value=(other)
+            @value = other
+            current_intent.raw_slots[name] = @value
+          end
+
           def resolve!(index: 0)
             self.value = resolved(index: index)
           end

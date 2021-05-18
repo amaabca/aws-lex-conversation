@@ -3,7 +3,7 @@
 describe Aws::Lex::Conversation::Type::Event do
   subject { described_class.shrink_wrap(event) }
 
-  context '#intents' do
+  describe '#intents' do
     let(:event) { parse_fixture('events/intents/nlu_ambiguous.json') }
 
     it 'returns an array with the first element equal to the current intent' do

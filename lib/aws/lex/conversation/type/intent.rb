@@ -14,7 +14,12 @@ module Aws
           optional :nlu_intent_confidence_score
 
           computed_property :slots, ->(instance) do
-            instance.raw_slots.each_with_object({}) do |(key, value), hash|
+            # any keys indexed without a value will return an empty Slot instance
+            default_hash = Hash.new do |_hash, key|
+              Slot.new(name: key.to_sym, value: nil, current_intent: instance)
+            end
+
+            instance.raw_slots.each_with_object(default_hash) do |(key, value), hash|
               hash[key.to_sym] = Slot.shrink_wrap(
                 name: key,
                 value: value,

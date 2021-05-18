@@ -6,6 +6,66 @@ describe Aws::Lex::Conversation do
 
   subject { described_class.new(event: event, context: lambda_context) }
 
+  describe '#checkpoint!' do
+    before(:each) do
+      subject.checkpoint!(
+        label: 'savePoint',
+        dialog_action_type: 'ElicitSlot',
+        fulfillment_state: ''
+      )
+    end
+
+    it 'creates an element in recentIntentSummaryView' do
+      view = subject.lex.recent_intent_summary_view.first
+
+      expect(view.checkpoint_label).to eq('savePoint')
+    end
+  end
+
+  describe '#checkpoint?' do
+    context 'when a checkpoint exists' do
+      before(:each) do
+        subject.checkpoint!(
+          label: 'savePoint',
+          dialog_action_type: 'ElicitSlot'
+        )
+      end
+
+      it 'returns true' do
+        expect(subject.checkpoint?(label: 'savePoint')).to be(true)
+      end
+    end
+
+    context 'when a checkpoint does not exist' do
+      it 'returns false' do
+        expect(subject.checkpoint?(label: 'waffles')).to be(false)
+      end
+    end
+  end
+
+  describe '#checkpoint' do
+    context 'when a checkpoint exists' do
+      before(:each) do
+        subject.checkpoint!(
+          label: 'savePoint',
+          dialog_action_type: 'ElicitSlot'
+        )
+      end
+
+      it 'returns the checkpoint' do
+        expect(subject.checkpoint(label: 'savePoint')).to be_an(
+          Aws::Lex::Conversation::Type::RecentIntentSummaryView
+        )
+      end
+    end
+
+    context 'when a checkpoint does not exist' do
+      it 'returns nil' do
+        expect(subject.checkpoint(label: 'waffles')).to be_nil
+      end
+    end
+  end
+
   describe '#respond' do
     let(:response) { subject.respond }
 
@@ -95,11 +155,36 @@ describe Aws::Lex::Conversation do
     it 'contains Slot objects' do
       expect(subject.slots[:one]).to be_an(Aws::Lex::Conversation::Type::Slot)
     end
+
+    context 'with a slot name that does not exist' do
+      let(:slot) { subject.slots[:waffles] }
+
+      it 'returns an instance of Slot' do
+        expect(slot).to be_an(Aws::Lex::Conversation::Type::Slot)
+      end
+
+      it 'has a blank value' do
+        expect(slot).to be_blank
+      end
+    end
   end
 
   describe '#session' do
     it 'returns the session attributes of the input event' do
       expect(subject.session).to eq(key: 'value')
+    end
+  end
+
+  describe '#stash' do
+    it 'returns a Hash value' do
+      expect(subject.stash).to be_a(Hash)
+    end
+
+    it 'may contain interaction-scoped ephemeral data' do
+      thing = Struct.new(:thing).new('thing')
+      subject.stash[:my_thing] = thing
+
+      expect(subject.stash[:my_thing]).to eq(thing)
     end
   end
 end
