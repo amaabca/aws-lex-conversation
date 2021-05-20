@@ -73,7 +73,7 @@ module Aws
         }.compact
 
         # flag that we need to send a new checkpoint back in the response
-        stash[:pending_checkpoint] = true
+        stash[:checkpoint_pending] = true
 
         if checkpoint?(label: label)
           # update the existing checkpoint

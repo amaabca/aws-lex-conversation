@@ -7,6 +7,12 @@ describe Aws::Lex::Conversation do
   subject { described_class.new(event: event, context: lambda_context) }
 
   describe '#checkpoint!' do
+    it 'sets the checkpoint_pending stash attribute' do
+      subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+
+      expect(subject.stash[:checkpoint_pending]).to be(true)
+    end
+
     context 'when an existing checkpoint does not exist' do
       before(:each) do
         subject.lex.recent_intent_summary_view = []
