@@ -10,6 +10,7 @@ module Aws
           required :current_intent, from: :current_intent, virtual: true
           required :name
           required :value
+          optional :active, virtual: true
 
           def as_json(_opts = {})
             to_lex
@@ -17,6 +18,10 @@ module Aws
 
           def to_lex
             value
+          end
+
+          def active?
+            @active
           end
 
           def filled?
@@ -46,6 +51,10 @@ module Aws
 
           def resolvable?
             details.resolutions.any?
+          end
+
+          def requestable?
+            active? && blank?
           end
 
           def details

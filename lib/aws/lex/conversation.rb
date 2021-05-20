@@ -58,6 +58,7 @@ module Aws
         lex.session_attributes
       end
 
+      # rubocop:disable Metrics/AbcSize
       def checkpoint!(opts = {})
         label = opts.fetch(:label)
         intent = opts.fetch(:intent_name) { intent_name }
@@ -71,15 +72,20 @@ module Aws
           slot_to_elicit: opts[:slot_to_elicit]
         }.compact
 
-        view = lex.recent_intent_summary_view.find { |v| v.intent_name == intent }
+        # flag that we need to send a new checkpoint back in the response
+        stash[:pending_checkpoint] = true
 
-        if view
-          view.assign_attributes!(params)
-          view
+        if checkpoint?(label: label)
+          # update the existing checkpoint
+          checkpoint(label: label).assign_attributes!(params)
         else
-          lex.recent_intent_summary_view.unshift(Type::RecentIntentSummaryView.new(params))
+          # push a new checkpoint to the recent_intent_summary_view
+          lex.recent_intent_summary_view.unshift(
+            Type::RecentIntentSummaryView.new(params)
+          )
         end
       end
+      # rubocop:enable Metrics/AbcSize
 
       def checkpoint?(label:)
         lex.recent_intent_summary_view.any? { |v| v.checkpoint_label == label }
@@ -87,6 +93,14 @@ module Aws
 
       def checkpoint(label:)
         lex.recent_intent_summary_view.find { |v| v.checkpoint_label == label }
+      end
+
+      # NOTE: lex responses should only include a recent_intent_summary_view
+      # block if we want to change/add an existing checkpoint. If we don't
+      # send a recent_intent_summary_view back in the response, lex retains
+      # the previous intent history.
+      def pending_checkpoints
+        stash[:checkpoint_pending] && lex.recent_intent_summary_view
       end
 
       def stash

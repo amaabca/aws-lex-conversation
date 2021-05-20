@@ -7,18 +7,30 @@ describe Aws::Lex::Conversation do
   subject { described_class.new(event: event, context: lambda_context) }
 
   describe '#checkpoint!' do
-    before(:each) do
-      subject.checkpoint!(
-        label: 'savePoint',
-        dialog_action_type: 'ElicitSlot',
-        fulfillment_state: ''
-      )
+    context 'when an existing checkpoint does not exist' do
+      before(:each) do
+        subject.lex.recent_intent_summary_view = []
+      end
+
+      it 'creates an element in recentIntentSummaryView' do
+        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+
+        expect(subject.lex.recent_intent_summary_view.size).to eq(1)
+      end
     end
 
-    it 'creates an element in recentIntentSummaryView' do
-      view = subject.lex.recent_intent_summary_view.first
+    context 'when an existing checkpoint does exist' do
+      let(:view) { subject.checkpoint(label: 'savePoint') }
 
-      expect(view.checkpoint_label).to eq('savePoint')
+      before(:each) do
+        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+      end
+
+      it 'updates the existing checkpoint in recentIntentSummaryView' do
+        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ConfirmIntent', fulfillment_state: '')
+
+        expect(view.dialog_action_type).to eq('ConfirmIntent')
+      end
     end
   end
 
