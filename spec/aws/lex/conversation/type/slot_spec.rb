@@ -3,7 +3,37 @@
 describe Aws::Lex::Conversation::Type::Slot do
   let(:current_intent) { build(:current_intent) }
   let(:name) { :test }
-  subject { described_class.new(value: value, name: name, current_intent: current_intent) }
+
+  # overriden in test contexts
+  let(:value) { 'test' }
+  let(:active) { true }
+
+  subject do
+    described_class.new(
+      active: active,
+      value: value,
+      name: name,
+      current_intent: current_intent
+    )
+  end
+
+  describe '#active?' do
+    context 'when the slot is active for the current intent' do
+      let(:active) { true }
+
+      it 'returns true' do
+        expect(subject.active?).to be(true)
+      end
+    end
+
+    context 'when the slot is not active for the current intent' do
+      let(:active) { false }
+
+      it 'returns false' do
+        expect(subject.active?).to be(false)
+      end
+    end
+  end
 
   describe '#filled?' do
     context 'it has a nil value' do
@@ -27,6 +57,32 @@ describe Aws::Lex::Conversation::Type::Slot do
 
       it 'returns true' do
         expect(subject.filled?).to eq(true)
+      end
+    end
+  end
+
+  describe '#blank?' do
+    context 'it has a nil value' do
+      let(:value) { nil }
+
+      it 'returns true' do
+        expect(subject.blank?).to eq(true)
+      end
+    end
+
+    context 'it has a blank value' do
+      let(:value) { '' }
+
+      it 'returns false' do
+        expect(subject.blank?).to eq(true)
+      end
+    end
+
+    context 'it has a value' do
+      let(:value) { '1' }
+
+      it 'returns false' do
+        expect(subject.blank?).to eq(false)
       end
     end
   end
@@ -122,6 +178,64 @@ describe Aws::Lex::Conversation::Type::Slot do
       it 'contains no resolution data' do
         expect(subject.details.resolutions).to be_empty
       end
+    end
+  end
+
+  describe '#requestable?' do
+    context 'when the slot is active for the current intent' do
+      let(:active) { true }
+
+      context 'when the slot is filled' do
+        let(:value) { 'value' }
+
+        it 'returns false' do
+          expect(subject.requestable?).to be(false)
+        end
+      end
+
+      context 'when the slot is not filled' do
+        let(:value) { nil }
+
+        it 'returns true' do
+          expect(subject.requestable?).to be(true)
+        end
+      end
+    end
+
+    context 'when the slot is not active for the current intent' do
+      let(:active) { false }
+
+      context 'when the slot is filled' do
+        let(:value) { 'value' }
+
+        it 'returns false' do
+          expect(subject.requestable?).to be(false)
+        end
+      end
+
+      context 'when the slot is not filled' do
+        let(:value) { nil }
+
+        it 'returns false' do
+          expect(subject.requestable?).to be(false)
+        end
+      end
+    end
+  end
+
+  describe '#value=' do
+    let(:value) { 'eggo' }
+
+    before(:each) do
+      subject.value = 'waffles'
+    end
+
+    it 'updates the value instance variable' do
+      expect(subject.value).to eq('waffles')
+    end
+
+    it 'updates the value in raw_slots' do
+      expect(subject.current_intent.raw_slots[subject.name]).to eq('waffles')
     end
   end
 end

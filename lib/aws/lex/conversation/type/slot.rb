@@ -10,6 +10,7 @@ module Aws
           required :current_intent, from: :current_intent, virtual: true
           required :name
           required :value
+          optional :active, virtual: true
 
           def as_json(_opts = {})
             to_lex
@@ -19,8 +20,21 @@ module Aws
             value
           end
 
+          def active?
+            @active
+          end
+
           def filled?
             value.to_s != ''
+          end
+
+          def blank?
+            !filled?
+          end
+
+          def value=(other)
+            @value = other
+            current_intent.raw_slots[name] = @value
           end
 
           def resolve!(index: 0)
@@ -37,6 +51,10 @@ module Aws
 
           def resolvable?
             details.resolutions.any?
+          end
+
+          def requestable?
+            active? && blank?
           end
 
           def details

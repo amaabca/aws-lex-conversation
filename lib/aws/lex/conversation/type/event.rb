@@ -17,7 +17,7 @@ module Aws
           required :output_dialog_mode
           required :message_version
           required :session_attributes
-          required :recent_intent_summary_view
+          required :recent_intent_summary_view, default: -> { [] }
           optional :request_attributes
           optional :sentiment_response
           optional :kendra_response

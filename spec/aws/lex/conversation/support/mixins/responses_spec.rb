@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 describe Aws::Lex::Conversation::Support::Mixins::Responses do
-  let(:klass) { Struct.new(:lex).include(described_class) }
+  let(:klass) { Struct.new(:lex, :pending_checkpoints).include(described_class) }
   let(:event) { parse_fixture('events/intents/all_properties.json') }
   let(:lex) { Aws::Lex::Conversation::Type::Event.shrink_wrap(event) }
   let(:response_card) { build(:response_card) }
 
-  subject { klass.new(lex) }
+  subject { klass.new(lex, nil) }
 
   describe '#close' do
     let(:response) do

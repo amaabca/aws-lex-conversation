@@ -9,7 +9,7 @@ module Aws
             def close(opts = {})
               params = {
                 active_contexts: lex.active_contexts,
-                recent_intent_summary_view: lex.recent_intent_summary_view,
+                recent_intent_summary_view: pending_checkpoints,
                 session_attributes: lex.session_attributes
               }.merge(opts)
               Response::Close.new(params).to_lex
@@ -19,7 +19,7 @@ module Aws
               params = {
                 active_contexts: lex.active_contexts,
                 intent_name: lex.current_intent.name,
-                recent_intent_summary_view: lex.recent_intent_summary_view,
+                recent_intent_summary_view: pending_checkpoints,
                 session_attributes: lex.session_attributes,
                 slots: lex.current_intent.slots
               }.merge(opts)
@@ -29,7 +29,7 @@ module Aws
             def delegate(opts = {})
               params = {
                 active_contexts: lex.active_contexts,
-                recent_intent_summary_view: lex.recent_intent_summary_view,
+                recent_intent_summary_view: pending_checkpoints,
                 session_attributes: lex.session_attributes,
                 slots: lex.current_intent.slots
               }.merge(opts)
@@ -39,7 +39,7 @@ module Aws
             def elicit_intent(opts = {})
               params = {
                 active_contexts: lex.active_contexts,
-                recent_intent_summary_view: lex.recent_intent_summary_view,
+                recent_intent_summary_view: pending_checkpoints,
                 session_attributes: lex.session_attributes
               }.merge(opts)
               Response::ElicitIntent.new(params).to_lex
@@ -49,7 +49,7 @@ module Aws
               params = {
                 active_contexts: lex.active_contexts,
                 intent_name: lex.current_intent.name,
-                recent_intent_summary_view: lex.recent_intent_summary_view,
+                recent_intent_summary_view: pending_checkpoints,
                 session_attributes: lex.session_attributes,
                 slots: lex.current_intent.slots
               }.merge(opts)
