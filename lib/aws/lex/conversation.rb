@@ -88,7 +88,7 @@ module Aws
       # rubocop:enable Metrics/AbcSize
 
       def checkpoint?(label:)
-        lex.recent_intent_summary_view.any? { |v| v.checkpoint_label == label }
+        !checkpoint(label: label).nil?
       end
 
       def checkpoint(label:)
