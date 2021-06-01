@@ -19,4 +19,26 @@ describe Aws::Lex::Conversation::Type::Event do
       ])
     end
   end
+
+  describe '#session_attributes' do
+    context 'when the value is null' do
+      let(:event) { parse_fixture('events/intents/null_session.json') }
+
+      it 'returns an empty hash' do
+        expect(subject.session_attributes).to be_a(Hash)
+        expect(subject.session_attributes).to be_empty
+      end
+    end
+  end
+
+  describe '#request_attributes' do
+    context 'when the value is null' do
+      let(:event) { parse_fixture('events/intents/null_session.json') }
+
+      it 'returns an empty hash' do
+        expect(subject.request_attributes).to be_a(Hash)
+        expect(subject.request_attributes).to be_empty
+      end
+    end
+  end
 end
