@@ -31,7 +31,7 @@ module Aws
                   type: input.dig(:dialogAction, :type)
                 }.compact,
                 intent: {
-                  confirmationState: 'None',
+                  confirmationState: lex.current_intent.confirmation_status.raw,
                   name: input.dig(:dialogAction, :intentName) || lex.current_intent.name,
                   slots: slots,
                   state: input.dig(:dialogAction, :fulfillmentState) || 'InProgress'

@@ -75,15 +75,19 @@ module Aws
         # flag that we need to send a new checkpoint back in the response
         stash[:checkpoint_pending] = true
 
+        # NOTE: this will only work for V2 right now...
         if checkpoint?(label: label)
           # update the existing checkpoint
           checkpoint(label: label).assign_attributes!(params)
         else
-          # push a new checkpoint to the recent_intent_summary_view
-          lex.recent_intent_summary_view.unshift(
+          checkpoints.unshift(
             Type::RecentIntentSummaryView.new(params)
           )
         end
+
+        # write to session
+        json = checkpoints.map { |c| c.to_lex }.to_json
+        session[:checkpoints] = Base64.encode64(json)
       end
       # rubocop:enable Metrics/AbcSize
 
@@ -92,7 +96,11 @@ module Aws
       end
 
       def checkpoint(label:)
-        lex.recent_intent_summary_view.find { |v| v.checkpoint_label == label }
+        checkpoints.find { |v| v.checkpoint_label == label }
+      end
+
+      def checkpoints
+        stash[:checkpoints] ||= build_checkpoints_from_session!
       end
 
       # NOTE: lex responses should only include a recent_intent_summary_view
@@ -105,6 +113,18 @@ module Aws
 
       def stash
         @stash ||= {}
+      end
+
+      private
+
+      def build_checkpoints_from_session!
+        if session[:checkpoints].nil?
+          []
+        else
+          JSON.parse(Base64.decode64(session[:checkpoints])).map do |checkpoint|
+            Type::RecentIntentSummaryView.shrink_wrap(checkpoint)
+          end
+        end
       end
     end
   end
