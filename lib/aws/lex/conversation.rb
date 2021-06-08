@@ -39,7 +39,7 @@ module Aws
       end
 
       def respond
-        chain.first.handle(self)
+        Transformer::V1ToV2.new(lex: lex).transform(chain.first.handle(self))
       end
 
       def intent_confidence
