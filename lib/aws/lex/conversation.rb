@@ -104,7 +104,7 @@ module Aws
       def persist_checkpoints!
         # write to session
         json = checkpoints.map { |c| c.to_lex }.to_json
-        session[:checkpoints] = Base64.encode64(json)
+        session[:checkpoints] = Base64.urlsafe_encode64(json, padding: false)
       end
 
       # NOTE: lex responses should only include a recent_intent_summary_view
@@ -125,7 +125,7 @@ module Aws
         if session[:checkpoints].nil?
           []
         else
-          JSON.parse(Base64.decode64(session[:checkpoints])).map do |checkpoint|
+          JSON.parse(Base64.urlsafe_decode64(session[:checkpoints])).map do |checkpoint|
             Type::RecentIntentSummaryView.shrink_wrap(checkpoint)
           end
         end
