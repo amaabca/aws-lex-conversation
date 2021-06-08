@@ -7,12 +7,13 @@ module Aws
     class Conversation
       include Support::Mixins::Responses
 
-      attr_accessor :event, :context, :lex
+      attr_accessor :event, :context, :lex, :version
 
       def initialize(opts = {})
         self.event = opts.fetch(:event)
         self.context = opts.fetch(:context)
-        self.lex = Type::Event.shrink_wrap(event)
+        self.version = opts.fetch(:version) { 'v1' }.upcases
+        self.lex = Type::{version.constantize}::Event.shrink_wrap(event)
       end
 
       def chain
@@ -43,6 +44,7 @@ module Aws
       end
 
       def intent_confidence
+        # As long as the event responds to "intents" we don't have to version this
         @intent_confidence ||= Type::IntentConfidence.new(event: lex)
       end
 
