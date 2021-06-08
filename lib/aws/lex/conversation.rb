@@ -85,9 +85,7 @@ module Aws
           )
         end
 
-        # write to session
-        json = checkpoints.map { |c| c.to_lex }.to_json
-        session[:checkpoints] = Base64.encode64(json)
+        persist_checkpoints!
       end
       # rubocop:enable Metrics/AbcSize
 
@@ -101,6 +99,12 @@ module Aws
 
       def checkpoints
         stash[:checkpoints] ||= build_checkpoints_from_session!
+      end
+
+      def persist_checkpoints!
+        # write to session
+        json = checkpoints.map { |c| c.to_lex }.to_json
+        session[:checkpoints] = Base64.encode64(json)
       end
 
       # NOTE: lex responses should only include a recent_intent_summary_view
