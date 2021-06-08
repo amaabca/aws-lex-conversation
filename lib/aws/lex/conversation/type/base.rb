@@ -9,7 +9,7 @@ module Aws
             base.include(Shrink::Wrap)
             base.include(InstanceMethods)
             base.extend(ClassMethods)
-            base.transform(Shrink::Wrap::Transformer::Symbolize)
+            base.transform(Shrink::Wrap::Transformer::Symbolize, depth: 10)
             base.class_eval do
               def initialize(opts = {})
                 assign_attributes!(opts)
