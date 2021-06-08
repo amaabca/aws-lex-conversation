@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe Aws::Lex::Conversation::Handler::Base do
-  let(:successor) { Aws::Lex::Conversation::Handler::Echo.new(successor: nil, options: {}) }
+describe Aws::Lex::Conversation::Handler::V1::Base do
+  let(:successor) { Aws::Lex::Conversation::Handler::V1::Echo.new(successor: nil, options: {}) }
   subject { described_class.new(successor: successor, options: {}) }
 
   describe '#response' do

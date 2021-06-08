@@ -20,18 +20,20 @@ bundle install
 
 ## Usage
 
-At a high level, you must create a new instance of `Aws::Lex::Conversation`.
+### Lex Version 1
+
+At a high level, you must create a new instance of `Aws::Lex::V1::Conversation`.
 
 Generally the conversation instance will be initialized inside your Lambda handler method as follows:
 
 ```ruby
 def my_lambda_handler(event:, context:)
-  conversation = Aws::Lex::Conversation.new(event: event, context: context)
+  conversation = Aws::Lex::V1::Conversation.new(event: event, context: context)
 
   # define a chain of your own Handler classes
   conversation.handlers = [
     {
-      handler: Aws::Lex::Conversation::Handler::Delegate,
+      handler: Aws::Lex::Conversation::Handler::V1::Delegate,
       options: {
         respond_on: ->(conversation) { conversation.current_intent.name == 'MyIntent' }
       }
@@ -45,18 +47,18 @@ end
 
 Any custom behaviour in your flow is achieved by defining a Handler class. Handler classes must provide the following:
 
-1. Inherit from `Aws::Lex::Conversation::Handler::Base`.
+1. Inherit from `Aws::Lex::Conversation::Handler::V1::Base`.
 2. Define a `will_respond?(conversation)` method that returns a boolean value.
 3. Define a `response(conversation)` method to return final response to Lex. This method is called if `will_respond?` returns `true`.
 
-The handlers defined on an `Aws::Lex::Conversation` instance will be called one-by-one in the order defined.
+The handlers defined on an `Aws::Lex::V1::Conversation` instance will be called one-by-one in the order defined.
 
 The first handler that returns `true` for the `will_respond?` method will provide the final Lex response action.
 
-### Custom Handler Example
+#### Custom Handler Example
 
 ```ruby
-class SayHello < Aws::Lex::Conversation::Handler::Base
+class SayHello < Aws::Lex::Conversation::Handler::V1::Base
   def will_respond?(conversation)
     conversation.lex.invocation_source.dialog_code_hook? && # callback is for DialogCodeHook (i.e. validation)
     conversation.lex.current_intent.name == 'SayHello' &&   # Lex has routed to the 'SayHello' intent
@@ -77,10 +79,10 @@ class SayHello < Aws::Lex::Conversation::Handler::Base
     # )
     #
     conversation.close(
-      fulfillment_state: Aws::Lex::Conversation::Type::FulfillmentState.new('Fulfilled'),
-      message: Aws::Lex::Conversation::Type::Message.new(
+      fulfillment_state: Aws::Lex::Conversation::Type::V1::FulfillmentState.new('Fulfilled'),
+      message: Aws::Lex::Conversation::Type::V1::Message.new(
         content: "Hello, #{name}!",
-        content_type: Aws::Lex::Conversation::Type::Message::ContentType.new('PlainText')
+        content_type: Aws::Lex::Conversation::Type::V1::Message::ContentType.new('PlainText')
       )
     )
   end
@@ -89,7 +91,9 @@ end
 
 ## Built-In Handlers
 
-### `Aws::Lex::Conversation::Handler::Echo`
+### Lex Version 1
+
+#### `Aws::Lex::Conversation::Handler::V1::Echo`
 
 This handler simply returns a close response with a message that matches the `inputTranscript` property of the input event.
 
@@ -103,10 +107,10 @@ This handler simply returns a close response with a message that matches the `in
 i.e.
 
 ```ruby
-conversation = Aws::Lex::Conversation.new(event: event, context: context)
+conversation = Aws::Lex::V1::Conversation.new(event: event, context: context)
 conversation.handlers = [
   {
-    handler: Aws::Lex::Conversation::Handler::Echo,
+    handler: Aws::Lex::Conversation::Handler::V1::Echo,
     options: {
       respond_on: ->(c) { true },
       fulfillment_state: 'Failed',
@@ -118,7 +122,7 @@ conversation.handlers = [
 conversation.respond # => { dialogAction: { type: 'Close' } ... }
 ```
 
-### `Aws::Lex::Conversation::Handler::Delegate`
+#### `Aws::Lex::Conversation::Handler::V1::Delegate`
 
 This handler returns a `Delegate` response to the Lex bot (i.e. "do the next bot action").
 
@@ -129,10 +133,10 @@ This handler returns a `Delegate` response to the Lex bot (i.e. "do the next bot
 i.e.
 
 ```ruby
-conversation = Aws::Lex::Conversation.new(event: event, context: context)
+conversation = Aws::Lex::V1::Conversation.new(event: event, context: context)
 conversation.handlers = [
   {
-    handler: Aws::Lex::Conversation::Handler::Delegate,
+    handler: Aws::Lex::Conversation::Handler::V1::Delegate,
     options: {
       respond_on: ->(c) { true }
     }
@@ -141,7 +145,7 @@ conversation.handlers = [
 conversation.respond # => { dialogAction: { type: 'Delegate' } }
 ```
 
-### `Aws::Lex::Conversation::Handler::SlotResolution`
+#### `Aws::Lex::Conversation::Handler::V1::SlotResolution`
 
 This handler will set all slot values equal to their top resolution in the input event. The handler then calls the next handler in the chain for a response.
 
@@ -154,13 +158,13 @@ This handler will set all slot values equal to their top resolution in the input
 i.e.
 
 ```ruby
-conversation = Aws::Lex::Conversation.new(event: event, context: context)
+conversation = Aws::Lex::V1::Conversation.new(event: event, context: context)
 conversation.handlers = [
   {
-    handler: Aws::Lex::Conversation::Handler::SlotResolution
+    handler: Aws::Lex::Conversation::Handler::V1::SlotResolution
   },
   {
-    handler: Aws::Lex::Conversation::Handler::Delegate,
+    handler: Aws::Lex::Conversation::Handler::V1::Delegate,
     options: {
       respond_on: ->(c) { true }
     }

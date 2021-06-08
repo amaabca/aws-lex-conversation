@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+module Aws
+  module Lex
+    class Conversation
+      module Type
+        module V1
+          class OutputDialogMode
+            include Enumeration
+
+            enumeration('Voice')
+            enumeration('Text')
+          end
+        end
+      end
+    end
+  end
+end

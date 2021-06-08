@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe Aws::Lex::Conversation do
-  let(:event) { parse_fixture('events/intents/echo.json') }
+describe Aws::Lex::V1::Conversation do
+  let(:event) { parse_fixture('events/intents/v1/echo.json') }
   let(:lambda_context) { build(:context) }
 
   subject { described_class.new(event: event, context: lambda_context) }
@@ -72,7 +72,7 @@ describe Aws::Lex::Conversation do
 
       it 'returns the checkpoint' do
         expect(subject.checkpoint(label: 'savePoint')).to be_an(
-          Aws::Lex::Conversation::Type::RecentIntentSummaryView
+          Aws::Lex::Conversation::Type::V1::RecentIntentSummaryView
         )
       end
     end
@@ -90,7 +90,7 @@ describe Aws::Lex::Conversation do
     context 'with a matching handler' do
       before(:each) do
         subject.handlers = [{
-          handler: Aws::Lex::Conversation::Handler::Echo,
+          handler: Aws::Lex::Conversation::Handler::V1::Echo,
           options: {
             respond_on: ->(_conversation) { true }
           }
@@ -105,7 +105,7 @@ describe Aws::Lex::Conversation do
     context 'without a matching handler' do
       before(:each) do
         subject.handlers = [{
-          handler: Aws::Lex::Conversation::Handler::Echo,
+          handler: Aws::Lex::Conversation::Handler::V1::Echo,
           options: {
             respond_on: ->(_conversation) { false }
           }
@@ -122,7 +122,7 @@ describe Aws::Lex::Conversation do
     context 'when no options are present' do
       before(:each) do
         subject.handlers = [
-          { handler: Aws::Lex::Conversation::Handler::Echo }
+          { handler: Aws::Lex::Conversation::Handler::V1::Echo }
         ]
       end
 
@@ -135,8 +135,8 @@ describe Aws::Lex::Conversation do
   describe '#handlers' do
     before(:each) do
       subject.handlers = [
-        { handler: Aws::Lex::Conversation::Handler::Echo },
-        { handler: Aws::Lex::Conversation::Handler::Delegate }
+        { handler: Aws::Lex::Conversation::Handler::V1::Echo },
+        { handler: Aws::Lex::Conversation::Handler::V1::Delegate }
       ]
     end
 
@@ -146,8 +146,8 @@ describe Aws::Lex::Conversation do
 
     it 'contains the classes of each handler' do
       handlers = [
-        Aws::Lex::Conversation::Handler::Echo,
-        Aws::Lex::Conversation::Handler::Delegate
+        Aws::Lex::Conversation::Handler::V1::Echo,
+        Aws::Lex::Conversation::Handler::V1::Delegate
       ]
       expect(subject.handlers).to eq(handlers)
     end
@@ -161,7 +161,7 @@ describe Aws::Lex::Conversation do
 
   describe '#intent_confidence' do
     it 'returns an instance of Aws::Lex::Conversation::Type::IntentConfidence' do
-      expect(subject.intent_confidence).to be_an(Aws::Lex::Conversation::Type::IntentConfidence)
+      expect(subject.intent_confidence).to be_an(Aws::Lex::Conversation::Type::V1::IntentConfidence)
     end
   end
 
@@ -171,14 +171,14 @@ describe Aws::Lex::Conversation do
     end
 
     it 'contains Slot objects' do
-      expect(subject.slots[:one]).to be_an(Aws::Lex::Conversation::Type::Slot)
+      expect(subject.slots[:one]).to be_an(Aws::Lex::Conversation::Type::V1::Slot)
     end
 
     context 'with a slot name that does not exist' do
       let(:slot) { subject.slots[:waffles] }
 
       it 'returns an instance of Slot' do
-        expect(slot).to be_an(Aws::Lex::Conversation::Type::Slot)
+        expect(slot).to be_an(Aws::Lex::Conversation::Type::V1::Slot)
       end
 
       it 'has a blank value' do
