@@ -12,15 +12,19 @@ module Aws
 
               if slot.filled?
                 hash[name] = {
-                  interpretedValue: slot.value,
-                  originalValue: slot.original_value,
-                  resolvedValues: slot.details.resolutions.map(&:value)
+                  value: {
+                    interpretedValue: slot.value,
+                    originalValue: slot.original_value,
+                    resolvedValues: slot.details.resolutions.map(&:value)
+                  }
                 }
               elsif value
                 hash[name] = {
-                  interpretedValue: value,
-                  originalValue: value,
-                  resolvedValues: [value]
+                  value: {
+                    interpretedValue: value,
+                    originalValue: value,
+                    resolvedValues: [value]
+                  }
                 }
               else
                 hash[name] = nil
