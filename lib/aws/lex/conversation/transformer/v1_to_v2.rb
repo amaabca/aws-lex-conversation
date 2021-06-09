@@ -5,21 +5,27 @@ module Aws
         class V1ToV2 < Shrink::Wrap::Transformer::Base
           def transform(input)
             lex = options.fetch(:lex)
-            slots = lex.current_intent.slots.each_with_object({}) do |(key, value), hash|
-              if value.filled?
-                hash[key] = {
-                  value: {
-                    interpretedValue: value.value,
-                    originalValue: value.original_value,
-                    resolvedValues: value.details.resolutions.map(&:value)
-                  }
+            raw_slots = input.dig(:dialogAction, :slots) { lex.current_intent.raw_slots }
+            slots = raw_slots.each_with_object({}) do |(key, value), hash|
+              name = key.to_sym
+              slot = lex.current_intent.slots[name]
+
+              if slot.filled?
+                hash[name] = {
+                  interpretedValue: slot.value,
+                  originalValue: slot.original_value,
+                  resolvedValues: slot.details.resolutions.map(&:value)
+                }
+              elsif value
+                hash[name] = {
+                  interpretedValue: value,
+                  originalValue: value,
+                  resolvedValues: [value]
                 }
               else
-                hash[key] = nil
+                hash[name] = nil
               end
             end
-
-            slots = nil if input.dig(:dialogAction, :intentName) != lex.current_intent.name
 
             message = input.dig(:dialogAction, :message)
             messages = message ? [message] : []
