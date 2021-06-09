@@ -19,6 +19,8 @@ module Aws
               end
             end
 
+            slots = nil if input.dig(:dialogAction, :intentName) != lex.current_intent.name
+
             message = input.dig(:dialogAction, :message)
             messages = message ? [message] : []
 
