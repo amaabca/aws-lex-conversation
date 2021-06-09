@@ -5,7 +5,7 @@ module Aws
         class V1ToV2 < Shrink::Wrap::Transformer::Base
           def transform(input)
             lex = options.fetch(:lex)
-            raw_slots = input.dig(:dialogAction, :slots) { lex.current_intent.raw_slots }
+            raw_slots = input.dig(:dialogAction, :slots) || lex.current_intent.raw_slots
             slots = raw_slots.each_with_object({}) do |(key, value), hash|
               name = key.to_sym
               slot = lex.current_intent.slots[name]
