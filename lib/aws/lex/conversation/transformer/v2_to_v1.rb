@@ -17,6 +17,12 @@ module Aws
                 originalValue: value&.dig(:value, :originalValue)
               }
             end
+            encoded_checkpoints = input.dig(:sessionState, :sessionAttributes, :checkpoints)
+            checkpoints = if encoded_checkpoints
+                            JSON.parse(Base64.urlsafe_decode64(encoded_checkpoints), symbolize_names: true)
+                          else
+                            []
+                          end
 
             {
               currentIntent: {
@@ -39,7 +45,7 @@ module Aws
               outputDialogMode: input[:inputMode],
               sessionAttributes: input.dig(:sessionState, :sessionAttributes) || {},
               requestAttributes: input[:requestAttributes] || {},
-              recentIntentSummaryView: [],
+              recentIntentSummaryView: checkpoints,
               sentimentResponse: nil,
               kendraResponse: nil,
               activeContexts: []

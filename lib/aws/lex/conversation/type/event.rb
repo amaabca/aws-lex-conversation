@@ -7,8 +7,6 @@ module Aws
         class Event
           include Base
 
-          transform(Transformer::V2ToV1)
-
           required :active_contexts, default: -> { [] }
           required :alternative_intents, default: -> { [] }
           required :current_intent

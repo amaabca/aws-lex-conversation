@@ -7,12 +7,20 @@ module Aws
     class Conversation
       include Support::Mixins::Responses
 
-      attr_accessor :event, :context, :lex
+      attr_accessor :event, :context, :lex, :translate_v2
 
       def initialize(opts = {})
         self.event = opts.fetch(:event)
         self.context = opts.fetch(:context)
-        self.lex = Type::Event.shrink_wrap(event)
+        self.translate_v2 = opts.fetch(:translate_v2) { false }
+
+        if translate_v2
+          symbolized_event = Shrink::Wrap::Transformer::Symbolize.new(depth: 6).transform(event)
+          transformed_event = Transformer::V2ToV1.new.transform(symbolized_event)
+          self.lex = Type::Event.new(transformed_event)
+        else
+          self.lex = Type::Event.shrink_wrap(event)
+        end
       end
 
       def chain
@@ -39,7 +47,11 @@ module Aws
       end
 
       def respond
-        Transformer::V1ToV2.new(lex: lex).transform(chain.first.handle(self))
+        if translate_v2
+          Transformer::V1ToV2.new(lex: lex).transform(chain.first.handle(self))
+        else
+          chain.first.handle(self)
+        end
       end
 
       def intent_confidence
@@ -75,17 +87,14 @@ module Aws
         # flag that we need to send a new checkpoint back in the response
         stash[:checkpoint_pending] = true
 
-        # NOTE: this will only work for V2 right now...
         if checkpoint?(label: label)
           # update the existing checkpoint
           checkpoint(label: label).assign_attributes!(params)
         else
-          checkpoints.unshift(
+          lex.recent_intent_summary_view.unshift(
             Type::RecentIntentSummaryView.new(params)
           )
         end
-
-        persist_checkpoints!
       end
       # rubocop:enable Metrics/AbcSize
 
@@ -94,17 +103,7 @@ module Aws
       end
 
       def checkpoint(label:)
-        checkpoints.find { |v| v.checkpoint_label == label }
-      end
-
-      def checkpoints
-        stash[:checkpoints] ||= build_checkpoints_from_session!
-      end
-
-      def persist_checkpoints!
-        # write to session
-        json = checkpoints.map { |c| c.to_lex }.to_json
-        session[:checkpoints] = Base64.urlsafe_encode64(json, padding: false)
+        lex.recent_intent_summary_view.find { |v| v.checkpoint_label == label }
       end
 
       # NOTE: lex responses should only include a recent_intent_summary_view
@@ -117,18 +116,6 @@ module Aws
 
       def stash
         @stash ||= {}
-      end
-
-      private
-
-      def build_checkpoints_from_session!
-        if session[:checkpoints].nil?
-          []
-        else
-          JSON.parse(Base64.urlsafe_decode64(session[:checkpoints])).map do |checkpoint|
-            Type::RecentIntentSummaryView.shrink_wrap(checkpoint)
-          end
-        end
       end
     end
   end

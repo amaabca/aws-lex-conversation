@@ -33,11 +33,21 @@ module Aws
 
             message = input.dig(:dialogAction, :message)
             messages = message ? [message] : []
+            encoded_checkpoints = if lex.pending_checkpoints
+                                    json = lex.pending_checkpoints.map(&:to_lex).to_json
+                                    Base64.urlsafe_encode64(json, padding: false)
+                                  else
+                                    lex.session[:checkpoints]
+                                  end
+
+            session = (input[:sessionAttributes] || {})
+              .merge(checkpoints: encoded_checkpoints)
+              .compact
 
             {
               sessionState: {
                 activeContexts: [],
-                sessionAttributes: input[:sessionAttributes] || {},
+                sessionAttributes: session,
                 dialogAction: {
                   slotToElicit: input.dig(:dialogAction, :slotToElicit),
                   type: input.dig(:dialogAction, :type)
@@ -50,7 +60,7 @@ module Aws
                 }.compact
               },
               messages: messages,
-              requestAttributes:{}
+              requestAttributes: {}
             }
           end
         end

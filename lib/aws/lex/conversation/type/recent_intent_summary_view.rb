@@ -26,8 +26,8 @@ module Aws
           # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           def restore(conversation, opts = {})
             # we need to remove the old checkpoint when restored
-            conversation.checkpoints.delete(self)
-            conversation.persist_checkpoints!
+            conversation.lex.recent_intent_summary_view.delete(self)
+            conversation.stash[:checkpoint_pending] = true
 
             case dialog_action_type.raw
             when 'Close'
