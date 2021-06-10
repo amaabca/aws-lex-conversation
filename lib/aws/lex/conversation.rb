@@ -17,7 +17,7 @@ module Aws
         if translate_v2
           symbolized_event = Shrink::Wrap::Transformer::Symbolize.new(depth: 6).transform(event)
           transformed_event = Transformer::V2ToV1.new.transform(symbolized_event)
-          self.lex = Type::Event.new(transformed_event)
+          self.lex = Type::Event.shrink_wrap(transformed_event)
         else
           self.lex = Type::Event.shrink_wrap(event)
         end
