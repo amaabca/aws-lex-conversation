@@ -37,7 +37,7 @@ module Aws
                                     json = input[:recentIntentSummaryView].to_json
                                     Base64.urlsafe_encode64(json, padding: false)
                                   else
-                                    lex.session[:checkpoints]
+                                    lex.session_attributes[:checkpoints]
                                   end
 
             session = (input[:sessionAttributes] || {})
