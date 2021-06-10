@@ -33,8 +33,8 @@ module Aws
 
             message = input.dig(:dialogAction, :message)
             messages = message ? [message] : []
-            encoded_checkpoints = if lex.pending_checkpoints
-                                    json = lex.pending_checkpoints.map(&:to_lex).to_json
+            encoded_checkpoints = if input[:recentIntentSummaryView]
+                                    json = input[:recentIntentSummaryView].to_json
                                     Base64.urlsafe_encode64(json, padding: false)
                                   else
                                     lex.session[:checkpoints]
