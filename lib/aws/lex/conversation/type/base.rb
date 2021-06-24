@@ -62,7 +62,7 @@ module Aws
             end
 
             def symbolize_hash!
-              ->(v) { v.transform_keys(&:to_sym) }
+              ->(v) { v.deep_transform_keys(&:to_sym) }
             end
 
             def computed_property(attribute, callable)

@@ -12,8 +12,7 @@ module Aws
       def initialize(opts = {})
         self.event = opts.fetch(:event)
         self.context = opts.fetch(:context)
-        self.version = opts.fetch(:version) { 'v1' }.upcases
-        self.lex = Type::{version.constantize}::Event.shrink_wrap(event)
+        self.lex = Type::Event.shrink_wrap(event)
       end
 
       def chain

@@ -9,7 +9,7 @@ module Aws
 
           required :intent_name
           required :slots
-          required :confirmation_status
+          required :confirmation_state
           required :dialog_action_type
 
           optional :checkpoint_label
@@ -18,10 +18,12 @@ module Aws
 
           coerce(
             slots: symbolize_hash!,
-            confirmation_status: ConfirmationStatus,
+            confirmation_status: ConfirmationState,
             dialog_action_type: DialogActionType,
             fulfillment_state: FulfillmentState
           )
+
+          # TODO: how do we handle this?
 
           # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
           def restore(conversation, opts = {})

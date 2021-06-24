@@ -1,0 +1,157 @@
+{
+  "sessionId": "157153201295874",
+  "requestAttributes": {},
+  "inputTranscript": "yes",
+  "interpretations": [
+    {
+      "intent": {
+        "slots": {
+          "HasACat": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "NO",
+              "resolvedValues": [
+                "NO"
+              ],
+              "interpretedValue": "NO"
+            }
+          },
+          "LivesInAHouse": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "YES",
+              "resolvedValues": [
+                "YES"
+              ],
+              "interpretedValue": "YES"
+            }
+          },
+          "PhoneNumber": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "7801231234",
+              "resolvedValues": [
+                "7801231234"
+              ],
+              "interpretedValue": "7801231234"
+            }
+          },
+          "CardNumber": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "12312345671233",
+              "resolvedValues": [
+                "12312345671233"
+              ],
+              "interpretedValue": "12312345671233"
+            }
+          }
+        },
+        "confirmationState": "Confirmed",
+        "name": "Lex_V2_Intent_A",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 1
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_FallbackIntent",
+        "state": "ReadyForFulfillment"
+      }
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_B",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 0.58
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_C",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 0.45
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_D",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 0.43
+    }
+  ],
+  "responseContentType": "text/plain; charset=utf-8",
+  "invocationSource": "FulfillmentCodeHook",
+  "messageVersion": "1.0",
+  "sessionState": {
+    "sessionAttributes": {
+      "foo": "NO",
+      "bar": "231234215125",
+      "baz": "Apples"
+    },
+    "activeContexts": [],
+    "intent": {
+      "slots": {
+        "HasACat": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "NO",
+            "resolvedValues": [
+              "NO"
+            ],
+            "interpretedValue": "NO"
+          }
+        },
+        "LivesInAHouse": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "YES",
+            "resolvedValues": [
+              "YES"
+            ],
+            "interpretedValue": "YES"
+          }
+        },
+        "PhoneNumber": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "7801231234",
+            "resolvedValues": [
+              "7801231234"
+            ],
+            "interpretedValue": "7801231234"
+          }
+        },
+        "CardNumber": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "12312345671233",
+            "resolvedValues": [
+              "12312345671233"
+            ],
+            "interpretedValue": "12312345671233"
+          }
+        }
+      }
+    },
+    "originatingRequestId": "d6349818-c9a1-463e-b8e6-7fcdc5169b71"
+  },
+  "inputMode": "Text",
+  "bot": {
+    "aliasName": "TestBotAlias",
+    "aliasId": "TSTALIASID",
+    "name": "LexBot",
+    "version": "DRAFT",
+    "localeId": "en_US",
+    "id": "YR23299542f"
+  }
+}

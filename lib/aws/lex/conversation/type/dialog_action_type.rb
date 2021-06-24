@@ -7,11 +7,11 @@ module Aws
         class DialogActionType
           include Enumeration
 
-          enumeration('ElicitIntent')
-          enumeration('ElicitSlot')
+          enumeration('Close')
           enumeration('ConfirmIntent')
           enumeration('Delegate')
-          enumeration('Close')
+          enumeration('ElicitIntent')
+          enumeration('ElicitSlot')
         end
       end
     end

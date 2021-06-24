@@ -4,12 +4,12 @@ module Aws
   module Lex
     class Conversation
       module Type
-        class ConfirmationStatus
+        class InputMode
           include Enumeration
 
-          enumeration('None')
-          enumeration('Confirmed')
-          enumeration('Denied')
+          enumeration('DTMF')
+          enumeration('Speech')
+          enumeration('Text')
         end
       end
     end

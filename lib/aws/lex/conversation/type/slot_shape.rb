@@ -4,13 +4,11 @@ module Aws
   module Lex
     class Conversation
       module Type
-        class SentimentLabel
+        class SlotShape
           include Enumeration
 
-          enumeration('POSITIVE')
-          enumeration('MIXED')
-          enumeration('NEUTRAL')
-          enumeration('NEGATIVE')
+          enumeration('List')
+          enumeration('Scalar')
         end
       end
     end
