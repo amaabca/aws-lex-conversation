@@ -9,16 +9,13 @@ module Aws
 
           def initialize(opts = {})
             super
-            self.message = opts[:message]
-            self.response_card = opts[:response_card]
+            session_state.dialog_action = dialog_action
           end
 
           def dialog_action
-            {
-              type: 'ElicitIntent',
-              message: message,
-              responseCard: response_card
-            }.compact
+            Aws::Lex::Conversation::Type::DialogAction.shrink_wrap(
+              type: 'ElicitIntent'
+            )
           end
         end
       end

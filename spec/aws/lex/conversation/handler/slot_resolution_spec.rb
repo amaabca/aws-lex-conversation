@@ -2,7 +2,7 @@
 
 describe Aws::Lex::Conversation::Handler::SlotResolution do
   let(:lambda_context) { build(:context) }
-  let(:event) { parse_fixture('events/intents/all_properties.json') }
+  let(:event) { parse_fixture('events/intents/basic.json') }
   let(:conversation) { Aws::Lex::Conversation.new(event: event, context: lambda_context) }
 
   describe '#will_respond?' do
@@ -29,14 +29,8 @@ describe Aws::Lex::Conversation::Handler::SlotResolution do
         )
       end
 
-      it 'resolves the top resolution for each slot' do
-        slots = response.dig(:dialogAction, :slots)
-        expect(slots[:'slot-one']).to eq('1')
-        expect(slots[:'slot-two']).to eq('2')
-      end
-
       it 'returns the response from the successor' do
-        expect(response.dig(:dialogAction, :type)).to eq('Delegate')
+        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Delegate')
       end
     end
   end

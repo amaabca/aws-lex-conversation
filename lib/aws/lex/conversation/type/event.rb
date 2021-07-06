@@ -19,8 +19,16 @@ module Aws
           required :session_state
 
           # TODO: do I want this?
+          computed_property :current_intent, ->(instance) do
+            instance.session_state.intent
+          end
+
           computed_property :intents, ->(instance) do
-            [instance.current_intent] | instance.alternative_intents
+            instance.map(&:interpretations).map(&:intent)
+          end
+
+          computed_property :alternate_intents, ->(instance) do
+            instance.intents.reject { |intent| intent.name == current_intent.name }
           end
 
           coerce(

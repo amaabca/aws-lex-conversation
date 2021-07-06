@@ -7,11 +7,11 @@ module Aws
         class Slot
           include Base
 
-          optional :shape
+          required :shape, default: -> { 'Scalar' }
           required :name, virtual: true
-          optional :lex_value, from: :value, virtual: true
+          required :lex_value, from: :value, default: -> { {} }, virtual: true
           required :lex_values, from: :values, default: -> { [] }, virtual: true
-          optional :active, virtual: true
+          required :active, default: -> { false }, virtual: true
 
           coerce(
             shape: SlotShape,
@@ -56,7 +56,7 @@ module Aws
           end
 
           def filled?
-            shape.list? ? values.present? : value != ''
+            shape.list? ? values.present? : value != '' && !value.nil?
           end
 
           def blank?

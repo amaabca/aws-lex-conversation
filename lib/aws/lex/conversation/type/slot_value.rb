@@ -7,9 +7,9 @@ module Aws
         class SlotValue
           include Base
 
-          required :original_value
-          required :interpreted_value
-          required :resolved_values
+          required :original_value, default: -> { '' }
+          required :interpreted_value, default: -> { '' }
+          required :resolved_values, default: -> { [] }
 
           alias_method :value, :interpreted_value
           alias_method :value=, :interpreted_value=
@@ -19,7 +19,7 @@ module Aws
           end
 
           def resolved(index: 0)
-            resolved_values.fetch(index)
+            resolved_values.fetch(index) { interpreted_value }
           end
 
           def resolvable?

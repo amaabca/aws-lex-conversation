@@ -56,7 +56,7 @@ module Aws
       end
 
       def session
-        lex.session_attributes
+        lex.session_state.session_attributes
       end
 
       # rubocop:disable Metrics/AbcSize

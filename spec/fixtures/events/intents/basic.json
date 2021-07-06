@@ -141,7 +141,10 @@
             "interpretedValue": "12312345671233"
           }
         }
-      }
+      },
+      "confirmationState": "Confirmed",
+      "name": "Lex_V2_Intent_A",
+      "state": "ReadyForFulfillment"
     },
     "originatingRequestId": "d6349818-c9a1-463e-b8e6-7fcdc5169b71"
   },

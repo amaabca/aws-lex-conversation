@@ -27,7 +27,7 @@ module Aws
 
             def to_lex
               self.class.attributes.each_with_object({}) do |attribute, hash|
-                value = transform_to_lex(instance_variable_get("@#{attribute}"))
+                value = transform_to_lex(public_send(attribute))
                 hash[self.class.mapping.fetch(attribute)] = value
               end
             end

@@ -7,7 +7,7 @@ module Aws
         class DialogAction
           include Base
 
-          required :slot_to_elicit
+          optional :slot_to_elicit
           required :type
 
           coerce(

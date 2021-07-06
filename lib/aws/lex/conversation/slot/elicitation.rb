@@ -27,10 +27,12 @@ module Aws
             increment_slot_elicitations!
             conversation.elicit_slot(
               slot_to_elicit: name,
-              message: {
-                contentType: content_type,
-                content: elicitation_content
-              }
+              messages: [
+                {
+                  contentType: content_type,
+                  content: elicitation_content
+                }
+              ]
             )
           end
 

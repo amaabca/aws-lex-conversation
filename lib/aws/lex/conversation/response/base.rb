@@ -6,15 +6,17 @@ module Aws
       module Response
         class Base
           attr_accessor(
-            :active_contexts,
-            :recent_intent_summary_view,
-            :session_attributes
+            :session_state,
+            :messages,
+            :request_attributes,
+            :fulfillment_state
           )
 
           def initialize(opts = {})
-            self.active_contexts = opts[:active_contexts]
-            self.recent_intent_summary_view = opts[:recent_intent_summary_view]
-            self.session_attributes = opts[:session_attributes]
+            self.session_state = opts[:session_state]
+            self.messages = opts[:messages]
+            self.request_attributes = opts[:request_attributes]
+            session_state.intent.state = opts.fetch(:fulfillment_state) { session_state.intent.state }
           end
 
           def dialog_action
@@ -23,10 +25,9 @@ module Aws
 
           def to_lex
             Type::Response.new(
-              active_contexts: active_contexts,
-              dialog_action: dialog_action,
-              recent_intent_summary_view: recent_intent_summary_view,
-              session_attributes: session_attributes
+              session_state: session_state,
+              messages: messages,
+              request_attributes: request_attributes
             ).to_lex
           end
         end

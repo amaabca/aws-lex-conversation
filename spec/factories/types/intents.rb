@@ -7,29 +7,21 @@ FactoryBot.define do
   ) do
     name { 'TestIntent' }
     raw_slots { { resolvable: 'one two', unresolvable: 'value', empty: nil } }
-    slot_details do
-      {
-        resolvable: Aws::Lex::Conversation::Type::SlotDetail.new(
-          original_value: 'one. two.',
-          resolutions: [
-            Aws::Lex::Conversation::Type::SlotResolution.new(value: '12')
-          ]
-        ),
-        unresolvable: Aws::Lex::Conversation::Type::SlotDetail.new(
-          original_value: 'value',
-          resolutions: []
-        )
-      }
-    end
-    confirmation_status { Aws::Lex::Conversation::Type::ConfirmationStatus.new('None') }
+    confirmation_state { Aws::Lex::Conversation::Type::ConfirmationState.new('None') }
 
     initialize_with do
       new(
         name: name,
         raw_slots: raw_slots,
-        slot_details: slot_details,
-        confirmation_status: confirmation_status
+        confirmation_state: confirmation_state
       )
     end
   end
 end
+
+# required :confirmation_state
+# optional :kendra_response
+# required :name
+# required :raw_slots, from: :slots, virtual: true
+# required :state
+# optional :originating_request_id

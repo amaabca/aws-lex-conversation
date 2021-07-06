@@ -7,10 +7,9 @@ module Aws
         class Response
           include Base
 
-          required :dialog_action
-          optional :session_attributes
-          optional :recent_intent_summary_view
-          optional :active_contexts
+          required :session_state
+          required :messages
+          required :request_attributes
         end
       end
     end
