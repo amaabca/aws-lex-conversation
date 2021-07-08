@@ -9,11 +9,11 @@ module Aws
 
           required :content_type, default: -> { 'PlainText' }
           required :content
-          # optional :image_response_card
+          optional :image_response_card
 
           coerce(
-            content_type: Message::ContentType#,
-            #image_response_card: Message::ImageResponseCard
+            content_type: Message::ContentType,
+            image_response_card: Aws::Lex::Conversation::Type::ResponseCard
           )
         end
       end

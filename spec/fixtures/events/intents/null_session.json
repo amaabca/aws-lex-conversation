@@ -1,99 +1,156 @@
 {
-  "messageVersion": "1.0",
-  "invocationSource": "DialogCodeHook",
-  "userId": "8df8adca-faad-4ec9-83af-50bce5882e3f",
-  "sessionAttributes": null,
-  "requestAttributes": null,
-  "bot": {
-    "name": "Lex_Bot_Test",
-    "alias": "PROD",
-    "version": "12"
-  },
-  "outputDialogMode": "Text",
-  "currentIntent": {
-    "name": "Lex_Intent_1",
-    "slots": {
-      "one": null,
-      "two": null,
-      "three": null,
-      "four": null,
-      "five": null
-    },
-    "slotDetails": {
-      "one": null,
-      "two": null,
-      "three": null,
-      "four": null,
-      "five": null
-    },
-    "confirmationStatus": "None",
-    "nluIntentConfidenceScore": 0.88
-  },
-  "alternativeIntents": [
+  "sessionId": "157153201295874",
+  "requestAttributes": {},
+  "inputTranscript": "yes",
+  "interpretations": [
     {
-      "name": "Lex_Intent_2",
-      "slots": {},
-      "slotDetails": {},
-      "confirmationStatus": "None",
-      "nluIntentConfidenceScore": 0.73
-    },
-    {
-      "name": "Lex_Intent_3",
-      "slots": {
-        "one": null,
-        "two": null,
-        "three": null,
-        "four": null,
-        "five": null
+      "intent": {
+        "slots": {
+          "HasACat": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "NO",
+              "resolvedValues": [
+                "NO"
+              ],
+              "interpretedValue": "NO"
+            }
+          },
+          "LivesInAHouse": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "YES",
+              "resolvedValues": [
+                "YES"
+              ],
+              "interpretedValue": "YES"
+            }
+          },
+          "PhoneNumber": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "7801231234",
+              "resolvedValues": [
+                "7801231234"
+              ],
+              "interpretedValue": "7801231234"
+            }
+          },
+          "CardNumber": {
+            "shape": "Scalar",
+            "value": {
+              "originalValue": "12312345671233",
+              "resolvedValues": [
+                "12312345671233"
+              ],
+              "interpretedValue": "12312345671233"
+            }
+          }
+        },
+        "confirmationState": "Confirmed",
+        "name": "Lex_V2_Intent_A",
+        "state": "ReadyForFulfillment"
       },
-      "slotDetails": {
-        "one": null,
-        "two": null,
-        "three": null,
-        "four": null,
-        "five": null
-      },
-      "confirmationStatus": "None",
-      "nluIntentConfidenceScore": 0.5
+      "nluConfidence": 0.88
     },
     {
-      "name": "AMAZON.FallbackIntent",
-      "slots": {},
-      "slotDetails": {},
-      "confirmationStatus": "None",
-      "nluIntentConfidenceScore": null
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_FallbackIntent",
+        "state": "ReadyForFulfillment"
+      }
     },
     {
-      "name": "Lex_Intent_4",
-      "slots": {
-        "one": null,
-        "two": null,
-        "three": null,
-        "four": null,
-        "five": null,
-        "six": null,
-        "seven": null,
-        "eight": null
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_B",
+        "state": "ReadyForFulfillment"
       },
-      "slotDetails": {
-        "one": null,
-        "two": null,
-        "three": null,
-        "four": null,
-        "five": null,
-        "six": null,
-        "seven": null,
-        "eight": null
+      "nluConfidence": 0.73
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_C",
+        "state": "ReadyForFulfillment"
       },
-      "confirmationStatus": "None",
-      "nluIntentConfidenceScore": 0.4
+      "nluConfidence": 0.45
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_D",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 0.43
     }
   ],
-  "inputTranscript": "this is a test",
-  "recentIntentSummaryView": null,
-  "sentimentResponse": {
-    "sentimentLabel": "NEGATIVE",
-    "sentimentScore": "{Positive: 3.8673697E-4,Negative: 0.97321737,Neutral: 0.026389739,Mixed: 6.2867725E-6}"
+  "responseContentType": "text/plain; charset=utf-8",
+  "invocationSource": "FulfillmentCodeHook",
+  "messageVersion": "1.0",
+  "sessionState": {
+    "sessionAttributes": null,
+    "activeContexts": [],
+    "intent": {
+      "slots": {
+        "HasACat": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "NO",
+            "resolvedValues": [
+              "NO"
+            ],
+            "interpretedValue": "NO"
+          }
+        },
+        "LivesInAHouse": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "YES",
+            "resolvedValues": [
+              "YES"
+            ],
+            "interpretedValue": "YES"
+          }
+        },
+        "PhoneNumber": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "7801231234",
+            "resolvedValues": [
+              "7801231234"
+            ],
+            "interpretedValue": "7801231234"
+          }
+        },
+        "CardNumber": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "12312345671233",
+            "resolvedValues": [
+              "12312345671233"
+            ],
+            "interpretedValue": "12312345671233"
+          }
+        }
+      },
+      "confirmationState": "Confirmed",
+      "name": "Lex_V2_Intent_A",
+      "state": "ReadyForFulfillment"
+    },
+    "originatingRequestId": "d6349818-c9a1-463e-b8e6-7fcdc5169b71"
   },
-  "kendraResponse": null
+  "inputMode": "Text",
+  "bot": {
+    "aliasName": "TestBotAlias",
+    "aliasId": "TSTALIASID",
+    "name": "LexBot",
+    "version": "DRAFT",
+    "localeId": "en_US",
+    "id": "YR23299542f"
+  }
 }

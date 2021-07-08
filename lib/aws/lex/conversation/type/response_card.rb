@@ -7,14 +7,13 @@ module Aws
         class ResponseCard
           include Base
 
-          optional :version
-          optional :content_type, default: 'application/vnd.amazonaws.card.generic'
-          required :generic_attachments
+          required :title
+          required :buttons, default: -> { [] }
+          optional :sub_title
+          optional :image_url
 
           coerce(
-            version: integer!,
-            content_type: ResponseCard::ContentType,
-            generic_attachments: Array[GenericAttachment]
+            buttons: Array[ResponseCard::Button]
           )
         end
       end

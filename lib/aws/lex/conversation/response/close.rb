@@ -8,6 +8,7 @@ module Aws
           def initialize(opts = {})
             super
             session_state.dialog_action = dialog_action
+            session_state.intent.state = opts.fetch(:fulfillment_state)
           end
 
           def dialog_action

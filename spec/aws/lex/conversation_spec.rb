@@ -6,84 +6,85 @@ describe Aws::Lex::Conversation do
 
   subject { described_class.new(event: event, context: lambda_context) }
 
-  # TODO: handle checkpoints
-  # describe '#checkpoint!' do
-  #   it 'sets the checkpoint_pending stash attribute' do
-  #     subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+  describe '#checkpoint!' do
+    context 'when an existing checkpoint does not exist' do
+      before(:each) do
+        subject.lex.session_state.session_attributes.checkpoints = []
+      end
 
-  #     expect(subject.stash[:checkpoint_pending]).to be(true)
-  #   end
+      it 'creates an element in session_attributes.checkpoints' do
+        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
 
-  #   context 'when an existing checkpoint does not exist' do
-  #     before(:each) do
-  #       subject.lex.recent_intent_summary_view = []
-  #     end
+        expect(subject.checkpoints.size).to eq(1)
+      end
+    end
 
-  #     it 'creates an element in recentIntentSummaryView' do
-  #       subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+    context 'when an existing checkpoint does exist' do
+      let(:view) { subject.checkpoint(label: 'savePoint') }
 
-  #       expect(subject.lex.recent_intent_summary_view.size).to eq(1)
-  #     end
-  #   end
+      before(:each) do
+        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+      end
 
-  #   context 'when an existing checkpoint does exist' do
-  #     let(:view) { subject.checkpoint(label: 'savePoint') }
+      it 'updates the existing checkpoint in recentIntentSummaryView' do
+        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ConfirmIntent', fulfillment_state: '')
 
-  #     before(:each) do
-  #       subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
-  #     end
+        expect(view.dialog_action_type).to eq('ConfirmIntent')
+      end
+    end
+  end
 
-  #     it 'updates the existing checkpoint in recentIntentSummaryView' do
-  #       subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ConfirmIntent', fulfillment_state: '')
+  describe '#checkpoint?' do
+    context 'when the event already contains the savePoint checkpoint' do
+      let(:event) { parse_fixture('events/intents/with_checkpoint.json') }
 
-  #       expect(view.dialog_action_type).to eq('ConfirmIntent')
-  #     end
-  #   end
-  # end
+      it 'returns true' do
+        expect(subject.checkpoint?(label: 'savePoint')).to be(true)
+      end
+    end
 
-  # describe '#checkpoint?' do
-  #   context 'when a checkpoint exists' do
-  #     before(:each) do
-  #       subject.checkpoint!(
-  #         label: 'savePoint',
-  #         dialog_action_type: 'ElicitSlot'
-  #       )
-  #     end
+    context 'when a checkpoint exists' do
+      before(:each) do
+        subject.checkpoint!(
+          label: 'savePoint',
+          dialog_action_type: 'ElicitSlot'
+        )
+      end
 
-  #     it 'returns true' do
-  #       expect(subject.checkpoint?(label: 'savePoint')).to be(true)
-  #     end
-  #   end
+      it 'returns true' do
+        expect(subject.checkpoint?(label: 'savePoint')).to be(true)
+      end
+    end
 
-  #   context 'when a checkpoint does not exist' do
-  #     it 'returns false' do
-  #       expect(subject.checkpoint?(label: 'waffles')).to be(false)
-  #     end
-  #   end
-  # end
+    context 'when a checkpoint does not exist' do
+      it 'returns false' do
+        expect(subject.checkpoint?(label: 'waffles')).to be(false)
+      end
+    end
+  end
 
-  # describe '#checkpoint' do
-  #   context 'when a checkpoint exists' do
-  #     before(:each) do
-  #       subject.checkpoint!(
-  #         label: 'savePoint',
-  #         dialog_action_type: 'ElicitSlot'
-  #       )
-  #     end
+  describe '#checkpoint' do
+    context 'when a checkpoint exists' do
+      before(:each) do
+        subject.checkpoint!(
+          label: 'savePoint',
+          dialog_action_type: 'ElicitSlot'
+        )
+      end
 
-  #     it 'returns the checkpoint' do
-  #       expect(subject.checkpoint(label: 'savePoint')).to be_an(
-  #         Aws::Lex::Conversation::Type::RecentIntentSummaryView
-  #       )
-  #     end
-  #   end
+      it 'returns the checkpoint' do
+        expect(subject.checkpoint(label: 'savePoint')).to be_an(
+          Aws::Lex::Conversation::Type::Checkpoint
+        )
+      end
+    end
 
-  #   context 'when a checkpoint does not exist' do
-  #     it 'returns nil' do
-  #       expect(subject.checkpoint(label: 'waffles')).to be_nil
-  #     end
-  #   end
-  # end
+    context 'when a checkpoint does not exist' do
+      it 'returns nil' do
+        expect(subject.checkpoint(label: 'waffles')).to be_nil
+      end
+    end
+  end
 
   describe '#respond' do
     let(:response) { subject.respond }

@@ -8,7 +8,7 @@ module Aws
           include Base
 
           required :shape, default: -> { 'Scalar' }
-          required :name, virtual: true
+          optional :name, virtual: true
           required :lex_value, from: :value, default: -> { {} }, virtual: true
           required :lex_values, from: :values, default: -> { [] }, virtual: true
           required :active, default: -> { false }, virtual: true
@@ -36,19 +36,24 @@ module Aws
             lex_value.interpreted_value
           end
 
+          # takes an array of slot values
           def values=(vals)
             return if shape.scalar?
 
             self.lex_values = vals.map do |val|
               Slot.shrink_wrap(
-                shape: 'Scalar',
-                value: val
+                active: true,
+                value: {
+                  interpretedValue: val,
+                  originalValue: val,
+                  resolvedValues: [val]
+                }
               )
             end
           end
 
           def values
-            lex_values.map(&:interpreted_value)
+            lex_values.map(&:value)
           end
 
           def active?
@@ -56,7 +61,7 @@ module Aws
           end
 
           def filled?
-            shape.list? ? values.present? : value != '' && !value.nil?
+            shape.list? ? values.any? : value != '' && !value.nil?
           end
 
           def blank?

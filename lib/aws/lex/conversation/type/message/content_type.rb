@@ -8,9 +8,10 @@ module Aws
           class ContentType
             include Enumeration
 
+            enumeration('CustomPayload')
+            enumeration('ImageResponseCard')
             enumeration('PlainText')
             enumeration('SSML')
-            enumeration('CustomPayload')
           end
         end
       end

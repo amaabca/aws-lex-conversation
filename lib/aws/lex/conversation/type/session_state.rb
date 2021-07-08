@@ -10,13 +10,13 @@ module Aws
           optional :active_contexts, default: -> { [] }
           optional :dialog_action
           required :intent, default: -> { {} }
-          optional :session_attributes, default: -> { [] }
+          required :session_attributes, default: -> { {} }
 
           coerce(
             active_contexts: Array[Context],
             dialog_action: DialogAction,
             intent: Intent,
-            session_attributes: symbolize_hash!
+            session_attributes: ->(v) { SessionAttributes[v.deep_symbolize_keys] }
           )
         end
       end

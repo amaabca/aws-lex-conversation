@@ -7,15 +7,12 @@ FactoryBot.define do
   ) do
     type { 'PlainText' }
 
+    trait :image_response_card do
+      type { 'ImageResponseCard' }
+    end
+
     initialize_with do
       new(type)
     end
   end
 end
-
-# required :confirmation_state
-# optional :kendra_response
-# required :name
-# required :raw_slots, from: :slots, virtual: true
-# required :state
-# optional :originating_request_id

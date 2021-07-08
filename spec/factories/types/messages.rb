@@ -8,6 +8,11 @@ FactoryBot.define do
     content { 'Testing' }
     content_type { build(:content_type) }
 
+    trait :image_response_card do
+      content_type { build(:content_type, :image_response_card) }
+      image_response_card { build(:response_card) }
+    end
+
     initialize_with do
       new(
         content: content,
@@ -16,10 +21,3 @@ FactoryBot.define do
     end
   end
 end
-
-# required :confirmation_state
-# optional :kendra_response
-# required :name
-# required :raw_slots, from: :slots, virtual: true
-# required :state
-# optional :originating_request_id

@@ -28,9 +28,9 @@ module Aws
           def candidates(threshold: standard_deviation)
             intents = event.intents.select do |intent|
               diff = event.current_intent
-                .nlu_intent_confidence_score
+                .nlu_confidence
                 .to_f
-                .-(intent.nlu_intent_confidence_score.to_f)
+                .-(intent.nlu_confidence.to_f)
                 .abs
 
               diff <= threshold
@@ -38,7 +38,7 @@ module Aws
 
             # sort descending
             intents.sort do |a, b|
-              b.nlu_intent_confidence_score.to_f <=> a.nlu_intent_confidence_score.to_f
+              b.nlu_confidence.to_f <=> a.nlu_confidence.to_f
             end
           end
 
@@ -58,13 +58,13 @@ module Aws
           private
 
           def calculate_mean
-            sum = event.intents.sum { |i| i.nlu_intent_confidence_score.to_f }
+            sum = event.intents.sum { |i| i.nlu_confidence.to_f }
             sum / event.intents.size
           end
 
           def calculate_standard_deviation
             normalized = event.intents.map do |intent|
-              (intent.nlu_intent_confidence_score.to_f - mean) ** 2
+              (intent.nlu_confidence.to_f - mean) ** 2
             end
             normalized_mean = normalized.sum / normalized.size
             Math.sqrt(normalized_mean)

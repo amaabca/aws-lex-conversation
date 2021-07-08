@@ -26,10 +26,3 @@ FactoryBot.define do
     end
   end
 end
-
-
-# required :shape, default: -> { 'Scalar' }
-# required :name, virtual: true
-# required :lex_value, from: :value, default: -> { {} }, virtual: true
-# required :lex_values, from: :values, default: -> { [] }, virtual: true
-# required :active, default: -> { false }, virtual: true

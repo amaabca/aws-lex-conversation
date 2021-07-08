@@ -71,12 +71,13 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                 confirmationState: 'None',
                 kendraResponse: nil,
                 name: 'Lex_Intent_Echo',
+                nluConfidence: 1.0,
                 originatingRequestId: nil,
                 slots: {
                   HasACat: {
                     shape: 'Scalar',
                     value: {
-                      interpretedValue: '',
+                      interpretedValue: 'Yes',
                       originalValue: 'yes',
                       resolvedValues: ['Yes']
                     },
@@ -89,6 +90,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                 SlotElicitations_HasACat: 1,
                 bar: '231234215125',
                 baz: 'Apples',
+                checkpoints: "W10=\n",
                 elicit_slot: true,
                 foo: 'NO'
               }
@@ -117,6 +119,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                   confirmationState: 'None',
                   kendraResponse: nil,
                   name: 'Lex_Intent_Echo',
+                  nluConfidence: 1.0,
                   originatingRequestId: nil,
                   slots: {
                     HasACat: {
@@ -135,6 +138,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                   SlotElicitations_HasACat: 3,
                   bar: '231234215125',
                   baz: 'Apples',
+                  checkpoints: "W10=\n",
                   elicit_slot: true,
                   foo: 'NO'
                 }
@@ -165,12 +169,13 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                 confirmationState: 'None',
                 kendraResponse: nil,
                 name: 'Lex_Intent_Echo',
+                nluConfidence: 1.0,
                 originatingRequestId: nil,
                 slots: {
                   HasACat: {
                     shape: 'Scalar',
                     value: {
-                      interpretedValue: nil,
+                      interpretedValue: 'Yes',
                       originalValue: 'yes',
                       resolvedValues: ['Yes']
                     },
@@ -183,6 +188,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                 SlotElicitations_HasACat: 1,
                 bar: '231234215125',
                 baz: 'Apples',
+                checkpoints: "W10=\n",
                 elicit_slot: true,
                 foo: 'NO'
               }

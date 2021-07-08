@@ -51,7 +51,16 @@
         "name": "Lex_V2_Intent_A",
         "state": "ReadyForFulfillment"
       },
-      "nluConfidence": 1
+      "nluConfidence": 1,
+      "sentimentResponse": {
+        "sentiment": "NEUTRAL",
+        "sentimentScore": {
+          "mixed": 1.3306875E-5,
+          "negative": 0.0038302848,
+          "neutral": 0.9676958,
+          "positive": 0.028460732
+        }
+      }
     },
     {
       "intent": {

@@ -12,7 +12,7 @@ module Aws
 
           coerce(
             sentiment_label: Sentiment,
-            sentiment_score: ->(v) { SentimentScore.parse_string(v) }
+            sentiment_score: SentimentScore
           )
         end
       end

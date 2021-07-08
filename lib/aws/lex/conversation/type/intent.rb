@@ -13,6 +13,7 @@ module Aws
           required :raw_slots, from: :slots, virtual: true
           required :state
           optional :originating_request_id
+          optional :nlu_confidence
 
           computed_property :slots, ->(instance) do
             # any keys indexed without a value will return an empty Slot instance
@@ -34,7 +35,8 @@ module Aws
           coerce(
             raw_slots: symbolize_hash!,
             slots: Array[Slot],
-            confirmation_state: ConfirmationState
+            confirmation_state: ConfirmationState,
+            nlu_confidence: float!(nilable: true)
           )
         end
       end

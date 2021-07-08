@@ -18,10 +18,3 @@ FactoryBot.define do
     end
   end
 end
-
-# required :confirmation_state
-# optional :kendra_response
-# required :name
-# required :raw_slots, from: :slots, virtual: true
-# required :state
-# optional :originating_request_id

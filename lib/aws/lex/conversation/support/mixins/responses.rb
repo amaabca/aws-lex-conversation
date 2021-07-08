@@ -41,8 +41,10 @@ module Aws
             def elicit_slot(opts = {})
               params = {
                 session_state: lex.session_state,
-                request_attributes: lex.request_attributes
+                request_attributes: lex.request_attributes,
+                intent_name: lex.session_state.intent.name
               }.merge(opts)
+              lex.session_state.intent = lex.intents.find { |i| i.name == params.fetch(:intent_name) }
               Response::ElicitSlot.new(params).to_lex
             end
           end

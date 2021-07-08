@@ -8,7 +8,7 @@ describe Aws::Lex::Conversation::Type::IntentConfidence do
 
   describe '#mean' do
     it 'returns the average of intent confidence scores' do
-      expect(subject.mean).to eq(0.502)
+      expect(subject.mean).to eq(0.49800000000000005)
     end
   end
 
@@ -33,8 +33,8 @@ describe Aws::Lex::Conversation::Type::IntentConfidence do
   describe '#candidates' do
     it 'returns an array consisting of all candidate intents' do
       expect(subject.candidates.map(&:name)).to eq(%w[
-        Lex_Intent_1
-        Lex_Intent_2
+        Lex_V2_Intent_A
+        Lex_V2_Intent_B
       ])
     end
   end
@@ -42,7 +42,7 @@ describe Aws::Lex::Conversation::Type::IntentConfidence do
   describe '#similar_alternates' do
     it 'returns an array consisting of similar intents (not including the current)' do
       expect(subject.similar_alternates.map(&:name)).to eq(%w[
-        Lex_Intent_2
+        Lex_V2_Intent_B
       ])
     end
   end

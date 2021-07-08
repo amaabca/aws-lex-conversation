@@ -7,12 +7,14 @@ describe Aws::Lex::Conversation::Type::Slot do
   let(:value) { build(:slot_value) }
   let(:active) { true }
   let(:shape) { build(:slot_shape) }
+  let(:values) { [] }
 
   subject do
     build(
       :slot,
       active: active,
       lex_value: value,
+      lex_values: values,
       name: name,
       shape: shape
     )
@@ -37,30 +39,45 @@ describe Aws::Lex::Conversation::Type::Slot do
   end
 
   describe '#filled?' do
-    context 'the slot is a Scalar' do
-      before(:each) do
+    context 'list slot' do
+      let(:shape) { build(:slot_shape, :list) }
 
+      context 'it has no values' do
+        it 'returns false' do
+          expect(subject.filled?).to eq(false)
+        end
       end
-    end
-    context 'it has a nil value' do
-      let(:value) { build(:slot_value, :nil) }
 
-      it 'returns false' do
-        expect(subject.filled?).to eq(false)
-      end
-    end
+      context 'it has a value' do
+        let(:values) { build_list(:slot_value, 1) }
 
-    context 'it has a blank value' do
-      let(:value) { build(:slot_value, :blank) }
-
-      it 'returns false' do
-        expect(subject.filled?).to eq(false)
+        it 'returns true' do
+          expect(subject.filled?).to eq(true)
+        end
       end
     end
 
-    context 'it has a value' do
-      it 'returns true' do
-        expect(subject.filled?).to eq(true)
+    context 'scalar slot' do
+      context 'it has a nil value' do
+        let(:value) { build(:slot_value, :nil) }
+
+        it 'returns false' do
+          expect(subject.filled?).to eq(false)
+        end
+      end
+
+      context 'it has a blank value' do
+        let(:value) { build(:slot_value, :blank) }
+
+        it 'returns false' do
+          expect(subject.filled?).to eq(false)
+        end
+      end
+
+      context 'it has a value' do
+        it 'returns true' do
+          expect(subject.filled?).to eq(true)
+        end
       end
     end
   end
@@ -137,34 +154,6 @@ describe Aws::Lex::Conversation::Type::Slot do
     end
   end
 
-  # describe '#details' do
-  #   context 'when a matching key in slot_details exists' do
-  #     let(:name) { :resolvable }
-  #     let(:value) { current_intent.slot_details[name].original_value }
-
-  #     it 'returns a SlotDetail instance' do
-  #       expect(subject.details).to be_a(Aws::Lex::Conversation::Type::SlotDetail)
-  #     end
-
-  #     it 'contains the correct resolution data' do
-  #       expect(subject.details.resolutions.size).to eq(1)
-  #     end
-  #   end
-
-  #   context 'when a matching key in slot_details does not exist' do
-  #     let(:name) { :empty }
-  #     let(:value) { nil }
-
-  #     it 'returns a new null SlotDetail instance' do
-  #       expect(subject.details).to be_a(Aws::Lex::Conversation::Type::SlotDetail)
-  #     end
-
-  #     it 'contains no resolution data' do
-  #       expect(subject.details.resolutions).to be_empty
-  #     end
-  #   end
-  # end
-
   describe '#requestable?' do
     context 'when the slot is active for the current intent' do
       let(:active) { true }
@@ -211,9 +200,23 @@ describe Aws::Lex::Conversation::Type::Slot do
     it 'updates the value instance variable' do
       expect(subject.value).to eq('waffles')
     end
+  end
 
-    # it 'updates the value in raw_slots' do
-    #   expect(subject.current_intent.raw_slots[subject.name]).to eq('waffles')
-    # end
+  describe '#values=' do
+    let(:shape) { build(:slot_shape, :list) }
+    let(:values) { build_list(:slot_value, 2) }
+    let(:new_values) { %w[cheese pepperoni] }
+
+    before(:each) do
+      subject.values = new_values
+    end
+
+    it 'sets slot values' do
+      expect(subject.values).to eq(new_values)
+    end
+
+    it 'sets scalar slot values' do
+      expect(subject.lex_values.map(&:shape).all?(&:scalar?)).to eq(true)
+    end
   end
 end

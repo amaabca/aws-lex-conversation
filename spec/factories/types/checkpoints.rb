@@ -2,18 +2,16 @@
 
 FactoryBot.define do
   factory(
-    :recent_intent_summary_view,
-    class: Aws::Lex::Conversation::Type::RecentIntentSummaryView
+    :checkpoint,
+    class: Aws::Lex::Conversation::Type::Checkpoint
   ) do
-    intent_name { 'TestIntent' }
-    slots { {} }
-    confirmation_status { Aws::Lex::Conversation::Type::ConfirmationStatus.new('None') }
-    checkpoint_label { 'myCheckpoint' }
-    fulfillment_state { nil }
+    intent_name { 'Lex_Intent_Echo' }
+    label { 'myCheckpoint' }
     slot_to_elicit { nil }
 
     trait :close do
       dialog_action_type { Aws::Lex::Conversation::Type::DialogActionType.new('Close') }
+      fulfillment_state { Aws::Lex::Conversation::Type::FulfillmentState.new('Failed') }
     end
 
     trait :confirm_intent do
@@ -30,8 +28,7 @@ FactoryBot.define do
 
     trait :elicit_slot do
       dialog_action_type { Aws::Lex::Conversation::Type::DialogActionType.new('ElicitSlot') }
-      slots { { one: nil } }
-      slot_to_elicit { 'one' }
+      slot_to_elicit { 'HasACat' }
     end
 
     trait :invalid do
@@ -40,12 +37,9 @@ FactoryBot.define do
 
     initialize_with do
       new(
-        checkpoint_label: checkpoint_label,
-        confirmation_status: confirmation_status,
+        label: label,
         dialog_action_type: dialog_action_type,
-        fulfillment_state: fulfillment_state,
         intent_name: intent_name,
-        slots: slots,
         slot_to_elicit: slot_to_elicit
       )
     end

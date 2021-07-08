@@ -37,8 +37,12 @@ module Aws
             def transform_to_lex(value)
               case value
               when Hash
-                value.each_with_object({}) do |(key, val), hash|
-                  hash[key.to_sym] = transform_to_lex(val)
+                if value.respond_to?(:to_lex)
+                  value.to_lex
+                else
+                  value.each_with_object({}) do |(key, val), hash|
+                    hash[key.to_sym] = transform_to_lex(val)
+                  end
                 end
               when Array
                 value.map { |v| transform_to_lex(v) }

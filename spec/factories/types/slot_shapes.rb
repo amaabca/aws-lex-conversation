@@ -7,6 +7,10 @@ FactoryBot.define do
   ) do
     shape { 'Scalar' }
 
+    trait :scalar do
+      shape { 'Scalar' }
+    end
+
     trait :list do
       shape { 'List' }
     end
