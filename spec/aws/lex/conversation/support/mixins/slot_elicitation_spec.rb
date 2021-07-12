@@ -90,7 +90,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                 SlotElicitations_HasACat: 1,
                 bar: '231234215125',
                 baz: 'Apples',
-                checkpoints: "W10=\n",
+                checkpoints: 'W10',
                 elicit_slot: true,
                 foo: 'NO'
               }
@@ -138,7 +138,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                   SlotElicitations_HasACat: 3,
                   bar: '231234215125',
                   baz: 'Apples',
-                  checkpoints: "W10=\n",
+                  checkpoints: 'W10',
                   elicit_slot: true,
                   foo: 'NO'
                 }
@@ -188,7 +188,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                 SlotElicitations_HasACat: 1,
                 bar: '231234215125',
                 baz: 'Apples',
-                checkpoints: "W10=\n",
+                checkpoints: 'W10',
                 elicit_slot: true,
                 foo: 'NO'
               }

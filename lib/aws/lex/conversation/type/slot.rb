@@ -27,18 +27,20 @@ module Aws
           end
 
           def value=(val)
-            return if shape.list?
+            raise TypeError, 'use values= for List-type slots' if shape.list?
 
             lex_value.interpreted_value = val
           end
 
           def value
+            raise TypeError, 'use values for List-type slots' if shape.list?
+
             lex_value.interpreted_value
           end
 
           # takes an array of slot values
           def values=(vals)
-            return if shape.scalar?
+            raise TypeError, 'use value= for Scalar-type slots' if shape.scalar?
 
             self.lex_values = vals.map do |val|
               Slot.shrink_wrap(
@@ -53,6 +55,8 @@ module Aws
           end
 
           def values
+            raise TypeError, 'use value for Scalar-type slots' if shape.scalar?
+
             lex_values.map(&:value)
           end
 

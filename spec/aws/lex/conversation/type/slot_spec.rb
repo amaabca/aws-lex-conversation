@@ -192,31 +192,72 @@ describe Aws::Lex::Conversation::Type::Slot do
     end
   end
 
+  describe '#value' do
+    context 'list slot' do
+      let(:shape) { build(:slot_shape, :list) }
+
+      it 'raises a TypeError' do
+        expect { subject.value }.to raise_error(TypeError)
+      end
+    end
+  end
+
+  describe '#values' do
+    context 'scalar slot' do
+      let(:shape) { build(:slot_shape, :scalar) }
+
+      it 'raises a TypeError' do
+        expect { subject.values }.to raise_error(TypeError)
+      end
+    end
+  end
+
   describe '#value=' do
-    before(:each) do
-      subject.value = 'waffles'
+    context 'scalar slot' do
+      before(:each) do
+        subject.value = 'waffles'
+      end
+
+      it 'updates the value instance variable' do
+        expect(subject.value).to eq('waffles')
+      end
     end
 
-    it 'updates the value instance variable' do
-      expect(subject.value).to eq('waffles')
+    context 'list slot' do
+      let(:shape) { build(:slot_shape, :list) }
+
+      it 'raises a TypeError' do
+        expect { subject.value = 'waffles' }.to raise_error(TypeError)
+      end
     end
   end
 
   describe '#values=' do
-    let(:shape) { build(:slot_shape, :list) }
     let(:values) { build_list(:slot_value, 2) }
     let(:new_values) { %w[cheese pepperoni] }
 
-    before(:each) do
-      subject.values = new_values
+    context 'list slot' do
+      let(:shape) { build(:slot_shape, :list) }
+
+      before(:each) do
+        subject.values = new_values
+      end
+
+      it 'sets slot values' do
+        expect(subject.values).to eq(new_values)
+      end
+
+      it 'sets scalar slot values' do
+        expect(subject.lex_values.map(&:shape).all?(&:scalar?)).to eq(true)
+      end
     end
 
-    it 'sets slot values' do
-      expect(subject.values).to eq(new_values)
-    end
+    context 'scalar slot' do
+      let(:shape) { build(:slot_shape, :scalar) }
 
-    it 'sets scalar slot values' do
-      expect(subject.lex_values.map(&:shape).all?(&:scalar?)).to eq(true)
+      it 'raises a TypeError' do
+        expect { subject.values = new_values }.to raise_error(TypeError)
+      end
     end
   end
 end

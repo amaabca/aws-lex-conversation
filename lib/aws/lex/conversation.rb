@@ -7,7 +7,7 @@ module Aws
     class Conversation
       include Support::Mixins::Responses
 
-      attr_accessor :event, :context, :lex, :version
+      attr_accessor :event, :context, :lex
 
       def initialize(opts = {})
         self.event = opts.fetch(:event)

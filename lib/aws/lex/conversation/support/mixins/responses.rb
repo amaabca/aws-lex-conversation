@@ -44,8 +44,16 @@ module Aws
                 request_attributes: lex.request_attributes,
                 intent_name: lex.session_state.intent.name
               }.merge(opts)
-              lex.session_state.intent = lex.intents.find { |i| i.name == params.fetch(:intent_name) }
+              lex.session_state.intent = find_intent_by_name(name: params.fetch(:intent_name))
               Response::ElicitSlot.new(params).to_lex
+            end
+
+            private
+
+            def find_intent_by_name(name:)
+              lex.session_state.intent = lex.intents.find(-> { raise ArgumentError, 'intent not found' }) do |intent|
+                intent.name == name
+              end
             end
           end
         end

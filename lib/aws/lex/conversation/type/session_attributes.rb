@@ -11,7 +11,9 @@ module Aws
 
           def checkpoints
             @checkpoints ||= begin # rubocop:disable Style/RedundantBegin
-              JSON.parse(Base64.decode64(fetch(:checkpoints) { Base64.encode64([].to_json) })).map do |checkpoint|
+              JSON.parse(
+                Base64.urlsafe_decode64(fetch(:checkpoints) { Base64.urlsafe_encode64([].to_json, padding: false) })
+              ).map do |checkpoint|
                 Checkpoint.shrink_wrap(checkpoint)
               end
             end
@@ -19,7 +21,7 @@ module Aws
 
           def to_lex
             merge(
-              checkpoints: Base64.encode64(checkpoints.map(&:to_lex).to_json)
+              checkpoints: Base64.urlsafe_encode64(checkpoints.map(&:to_lex).to_json, padding: false)
             )
           end
         end
