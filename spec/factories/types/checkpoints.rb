@@ -5,7 +5,7 @@ FactoryBot.define do
     :checkpoint,
     class: Aws::Lex::Conversation::Type::Checkpoint
   ) do
-    intent_name { 'Lex_Intent_Echo' }
+    intent { build(:current_intent, name: 'Lex_Intent_Echo') }
     label { 'myCheckpoint' }
     slot_to_elicit { nil }
 
@@ -39,7 +39,7 @@ FactoryBot.define do
       new(
         label: label,
         dialog_action_type: dialog_action_type,
-        intent_name: intent_name,
+        intent: intent,
         slot_to_elicit: slot_to_elicit
       )
     end

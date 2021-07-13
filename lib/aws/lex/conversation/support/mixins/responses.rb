@@ -18,9 +18,9 @@ module Aws
               params = {
                 session_state: lex.session_state,
                 request_attributes: lex.request_attributes,
-                intent_name: lex.session_state.intent.name
+                intent: lex.current_intent
               }.merge(opts)
-              lex.session_state.intent = Aws::Lex::Conversation::Type::Intent.new(name: params.fetch(:intent_name))
+              lex.session_state.intent = params.fetch(:intent)
               Response::ConfirmIntent.new(params).to_lex
             end
 
@@ -44,9 +44,9 @@ module Aws
               params = {
                 session_state: lex.session_state,
                 request_attributes: lex.request_attributes,
-                intent_name: lex.session_state.intent.name
+                intent: lex.current_intent
               }.merge(opts)
-              lex.session_state.intent = Aws::Lex::Conversation::Type::Intent.new(name: params.fetch(:intent_name))
+              lex.session_state.intent = params.fetch(:intent)
               Response::ElicitSlot.new(params).to_lex
             end
 

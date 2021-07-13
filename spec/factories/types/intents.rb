@@ -6,7 +6,30 @@ FactoryBot.define do
     class: Aws::Lex::Conversation::Type::Intent
   ) do
     name { 'TestIntent' }
-    raw_slots { { resolvable: 'one two', unresolvable: 'value', empty: nil } }
+    raw_slots do
+      {
+        HasACat: {
+          shape: 'Scalar',
+          value: {
+            originalValue: 'NO',
+            resolvedValues: [
+              'NO'
+            ],
+            interpretedValue: 'NO'
+          }
+        },
+        LivesInAHouse: {
+          shape: 'Scalar',
+          value: {
+            originalValue: 'YES',
+            resolvedValues: [
+              'YES'
+            ],
+            interpretedValue: 'YES'
+          }
+        }
+      }
+    end
     confirmation_state { Aws::Lex::Conversation::Type::ConfirmationState.new('None') }
 
     initialize_with do

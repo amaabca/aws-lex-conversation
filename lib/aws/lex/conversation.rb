@@ -60,12 +60,11 @@ module Aws
 
       def checkpoint!(opts = {})
         label = opts.fetch(:label)
-        intent = opts.fetch(:intent_name) { intent_name }
         params = {
           label: label,
           dialog_action_type: opts.fetch(:dialog_action_type),
           fulfillment_state: opts[:fulfillment_state],
-          intent_name: intent,
+          intent: lex.current_intent,
           slot_to_elicit: opts[:slot_to_elicit]
         }.compact
 

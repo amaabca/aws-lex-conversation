@@ -8,13 +8,14 @@ module Aws
           include Base
 
           required :dialog_action_type
-          required :intent_name
+          required :intent
 
           optional :label
           optional :fulfillment_state
           optional :slot_to_elicit
 
           coerce(
+            intent: Intent,
             dialog_action_type: DialogActionType,
             fulfillment_state: FulfillmentState
           )
@@ -29,7 +30,7 @@ module Aws
               )
             when 'ConfirmIntent'
               conversation.confirm_intent(
-                intent_name: intent_name,
+                intent: intent,
                 messages: opts.fetch(:messages)
               )
             when 'Delegate'
@@ -40,7 +41,7 @@ module Aws
               )
             when 'ElicitSlot'
               conversation.elicit_slot(
-                intent_name: intent_name,
+                intent: intent,
                 messages: opts.fetch(:messages),
                 slot_to_elicit: slot_to_elicit
               )

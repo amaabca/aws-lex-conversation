@@ -77,7 +77,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                   HasACat: {
                     shape: 'Scalar',
                     value: {
-                      interpretedValue: 'Yes',
+                      interpretedValue: '',
                       originalValue: 'yes',
                       resolvedValues: ['Yes']
                     },
@@ -175,7 +175,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                   HasACat: {
                     shape: 'Scalar',
                     value: {
-                      interpretedValue: 'Yes',
+                      interpretedValue: nil,
                       originalValue: 'yes',
                       resolvedValues: ['Yes']
                     },
