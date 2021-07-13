@@ -49,14 +49,6 @@ module Aws
               lex.session_state.intent = params.fetch(:intent)
               Response::ElicitSlot.new(params).to_lex
             end
-
-            private
-
-            def find_intent_by_name(name:)
-              lex.session_state.intent = lex.intents.find(-> { raise ArgumentError, 'intent not found' }) do |intent|
-                intent.name == name
-              end
-            end
           end
         end
       end
