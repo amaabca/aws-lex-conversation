@@ -7,21 +7,15 @@ describe Aws::Lex::Conversation do
   subject { described_class.new(event: event, context: lambda_context) }
 
   describe '#checkpoint!' do
-    it 'sets the checkpoint_pending stash attribute' do
-      subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
-
-      expect(subject.stash[:checkpoint_pending]).to be(true)
-    end
-
     context 'when an existing checkpoint does not exist' do
       before(:each) do
-        subject.lex.recent_intent_summary_view = []
+        subject.lex.session_state.session_attributes.checkpoints = []
       end
 
-      it 'creates an element in recentIntentSummaryView' do
+      it 'creates an element in session_attributes.checkpoints' do
         subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
 
-        expect(subject.lex.recent_intent_summary_view.size).to eq(1)
+        expect(subject.checkpoints.size).to eq(1)
       end
     end
 
@@ -41,6 +35,14 @@ describe Aws::Lex::Conversation do
   end
 
   describe '#checkpoint?' do
+    context 'when the event already contains the savePoint checkpoint' do
+      let(:event) { parse_fixture('events/intents/with_checkpoint.json') }
+
+      it 'returns true' do
+        expect(subject.checkpoint?(label: 'savePoint')).to be(true)
+      end
+    end
+
     context 'when a checkpoint exists' do
       before(:each) do
         subject.checkpoint!(
@@ -72,7 +74,7 @@ describe Aws::Lex::Conversation do
 
       it 'returns the checkpoint' do
         expect(subject.checkpoint(label: 'savePoint')).to be_an(
-          Aws::Lex::Conversation::Type::RecentIntentSummaryView
+          Aws::Lex::Conversation::Type::Checkpoint
         )
       end
     end
@@ -98,7 +100,7 @@ describe Aws::Lex::Conversation do
       end
 
       it 'returns a close response' do
-        expect(response.dig(:dialogAction, :type)).to eq('Close')
+        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Close')
       end
     end
 
@@ -167,11 +169,11 @@ describe Aws::Lex::Conversation do
 
   describe '#slots' do
     it 'returns the slot values of the input event' do
-      expect(subject.slots[:one].value).to eq('1')
+      expect(subject.slots[:HasACat].value).to eq('Yes')
     end
 
     it 'contains Slot objects' do
-      expect(subject.slots[:one]).to be_an(Aws::Lex::Conversation::Type::Slot)
+      expect(subject.slots[:HasACat]).to be_an(Aws::Lex::Conversation::Type::Slot)
     end
 
     context 'with a slot name that does not exist' do
@@ -189,7 +191,11 @@ describe Aws::Lex::Conversation do
 
   describe '#session' do
     it 'returns the session attributes of the input event' do
-      expect(subject.session).to eq(key: 'value')
+      expect(subject.session).to eq(
+        bar: '231234215125',
+        baz: 'Apples',
+        foo: 'NO'
+      )
     end
   end
 

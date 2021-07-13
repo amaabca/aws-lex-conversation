@@ -12,8 +12,8 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
 
   before(:each) do
     conversation.session[:elicit_slot] = elicit_slot
-    conversation.session[:SlotElicitations_one] = number_of_elicitations
-    conversation.slots[:one].value = slot_value
+    conversation.session[:SlotElicitations_HasACat] = number_of_elicitations
+    conversation.slots[:HasACat].value = slot_value
     subject.conversation = conversation
   end
 
@@ -55,22 +55,45 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
 
         it 'elicits the slot' do
           expect(subject.elicit_slots!).to include(
-            dialogAction: {
-              type: 'ElicitSlot',
-              intentName: 'Lex_Intent_Echo',
-              slots: {
-                one: ''
-              },
-              slotToElicit: 'one',
-              message: {
-                contentType: 'PlainText',
-                content: 'What is your favorite color?'
+            messages: [
+              {
+                content: 'Do you have a cat?',
+                contentType: 'PlainText'
               }
-            },
-            sessionAttributes: {
-              key: 'value',
-              elicit_slot: true,
-              SlotElicitations_one: 1
+            ],
+            sessionState: {
+              activeContexts: [],
+              dialogAction: {
+                slotToElicit: 'HasACat',
+                type: 'ElicitSlot'
+              },
+              intent: {
+                confirmationState: 'None',
+                kendraResponse: nil,
+                name: 'Lex_Intent_Echo',
+                nluConfidence: 1.0,
+                originatingRequestId: nil,
+                slots: {
+                  HasACat: {
+                    shape: 'Scalar',
+                    value: {
+                      interpretedValue: 'Yes',
+                      originalValue: 'yes',
+                      resolvedValues: ['Yes']
+                    },
+                    values: []
+                  }
+                },
+                state: 'ReadyForFulfillment'
+              },
+              sessionAttributes: {
+                SlotElicitations_HasACat: 1,
+                bar: '231234215125',
+                baz: 'Apples',
+                checkpoints: 'W10',
+                elicit_slot: true,
+                foo: 'NO'
+              }
             }
           )
         end
@@ -80,18 +103,45 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
 
           it 'calls the fallback lambda' do
             expect(subject.elicit_slots!).to include(
-              dialogAction: {
-                fulfillmentState: 'Failed',
-                type: 'Close',
-                message: {
-                  contentType: 'PlainText',
-                  content: 'Failed'
+              messages: [
+                {
+                  content: 'Failed',
+                  contentType: 'PlainText'
                 }
-              },
-              sessionAttributes: {
-                key: 'value',
-                elicit_slot: true,
-                SlotElicitations_one: 3
+              ],
+              sessionState: {
+                activeContexts: [],
+                dialogAction: {
+                  slotToElicit: nil,
+                  type: 'Close'
+                },
+                intent: {
+                  confirmationState: 'None',
+                  kendraResponse: nil,
+                  name: 'Lex_Intent_Echo',
+                  nluConfidence: 1.0,
+                  originatingRequestId: nil,
+                  slots: {
+                    HasACat: {
+                      shape: 'Scalar',
+                      value: {
+                        interpretedValue: '',
+                        originalValue: 'yes',
+                        resolvedValues: ['Yes']
+                      },
+                      values: []
+                    }
+                  },
+                  state: 'Failed'
+                },
+                sessionAttributes: {
+                  SlotElicitations_HasACat: 3,
+                  bar: '231234215125',
+                  baz: 'Apples',
+                  checkpoints: 'W10',
+                  elicit_slot: true,
+                  foo: 'NO'
+                }
               }
             )
           end
@@ -103,22 +153,45 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
 
         it 'elicits the slot' do
           expect(subject.elicit_slots!).to include(
-            dialogAction: {
-              type: 'ElicitSlot',
-              intentName: 'Lex_Intent_Echo',
-              slots: {
-                one: nil
-              },
-              slotToElicit: 'one',
-              message: {
-                contentType: 'PlainText',
-                content: 'What is your favorite color?'
+            messages: [
+              {
+                content: 'Do you have a cat?',
+                contentType: 'PlainText'
               }
-            },
-            sessionAttributes: {
-              key: 'value',
-              elicit_slot: true,
-              SlotElicitations_one: 1
+            ],
+            sessionState: {
+              activeContexts: [],
+              dialogAction: {
+                slotToElicit: 'HasACat',
+                type: 'ElicitSlot'
+              },
+              intent: {
+                confirmationState: 'None',
+                kendraResponse: nil,
+                name: 'Lex_Intent_Echo',
+                nluConfidence: 1.0,
+                originatingRequestId: nil,
+                slots: {
+                  HasACat: {
+                    shape: 'Scalar',
+                    value: {
+                      interpretedValue: 'Yes',
+                      originalValue: 'yes',
+                      resolvedValues: ['Yes']
+                    },
+                    values: []
+                  }
+                },
+                state: 'ReadyForFulfillment'
+              },
+              sessionAttributes: {
+                SlotElicitations_HasACat: 1,
+                bar: '231234215125',
+                baz: 'Apples',
+                checkpoints: 'W10',
+                elicit_slot: true,
+                foo: 'NO'
+              }
             }
           )
         end

@@ -4,10 +4,15 @@ module Aws
   module Lex
     class Conversation
       module Type
-        class SlotResolution
+        class DialogAction
           include Base
 
-          required :value
+          optional :slot_to_elicit
+          required :type
+
+          coerce(
+            type: DialogActionType
+          )
         end
       end
     end

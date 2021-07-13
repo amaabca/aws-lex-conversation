@@ -5,26 +5,19 @@ module Aws
     class Conversation
       module Response
         class ElicitSlot < Base
-          attr_accessor :intent_name, :message, :response_card, :slots, :slot_to_elicit
+          attr_accessor :slot_to_elicit
 
           def initialize(opts = {})
             super
-            self.intent_name = opts.fetch(:intent_name)
             self.slot_to_elicit = opts.fetch(:slot_to_elicit)
-            self.slots = opts.fetch(:slots)
-            self.message = opts[:message]
-            self.response_card = opts[:response_card]
+            session_state.dialog_action = dialog_action
           end
 
           def dialog_action
-            {
+            Aws::Lex::Conversation::Type::DialogAction.shrink_wrap(
               type: 'ElicitSlot',
-              intentName: intent_name,
-              slots: slots,
-              slotToElicit: slot_to_elicit,
-              message: message,
-              responseCard: response_card
-            }.compact
+              slotToElicit: slot_to_elicit
+            )
           end
         end
       end

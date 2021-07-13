@@ -6,9 +6,7 @@ module Aws
       module Handler
         class Delegate < Base
           def response(conversation)
-            conversation.delegate(
-              slots: conversation.lex.current_intent.slots
-            )
+            conversation.delegate
           end
         end
       end

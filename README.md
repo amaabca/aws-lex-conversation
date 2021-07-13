@@ -6,10 +6,30 @@ Have you played around with [AWS Lex](https://aws.amazon.com/lex/) and quickly r
 
 ## Installation
 
+### Lex V1
+
+Version 3.x is the last major version of this gem that will support Lex V1.
+
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'aws-lex-conversation'
+gem 'aws-lex-conversation', '~> 3.0'
+```
+
+And then execute:
+
+```bash
+bundle install
+```
+
+### Lex V2
+
+Version 4.x and higher support Lex V2.
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'aws-lex-conversation', '>= 4.0'
 ```
 
 And then execute:
@@ -78,10 +98,12 @@ class SayHello < Aws::Lex::Conversation::Handler::Base
     #
     conversation.close(
       fulfillment_state: Aws::Lex::Conversation::Type::FulfillmentState.new('Fulfilled'),
-      message: Aws::Lex::Conversation::Type::Message.new(
-        content: "Hello, #{name}!",
-        content_type: Aws::Lex::Conversation::Type::Message::ContentType.new('PlainText')
-      )
+      messages: [
+        Aws::Lex::Conversation::Type::Message.new(
+          content: "Hello, #{name}!",
+          content_type: Aws::Lex::Conversation::Type::Message::ContentType.new('PlainText')
+        )
+      ]
     )
   end
 end

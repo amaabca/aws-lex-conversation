@@ -7,17 +7,57 @@ module Aws
         class Slot
           include Base
 
-          required :current_intent, from: :current_intent, virtual: true
-          required :name
-          required :value
-          optional :active, virtual: true
+          required :shape, default: -> { 'Scalar' }
+          optional :name, virtual: true
+          required :lex_value, from: :value, default: -> { {} }, virtual: true
+          required :lex_values, from: :values, default: -> { [] }, virtual: true
+          required :active, default: -> { false }, virtual: true
 
-          def as_json(_opts = {})
-            to_lex
-          end
+          coerce(
+            shape: SlotShape,
+            lex_value: SlotValue,
+            lex_values: Array[Slot]
+          )
 
           def to_lex
-            value
+            super.merge(
+              value: transform_to_lex(lex_value),
+              values: transform_to_lex(lex_values)
+            )
+          end
+
+          def value=(val)
+            raise TypeError, 'use values= for List-type slots' if shape.list?
+
+            lex_value.interpreted_value = val
+          end
+
+          def value
+            raise TypeError, 'use values for List-type slots' if shape.list?
+
+            lex_value.interpreted_value
+          end
+
+          # takes an array of slot values
+          def values=(vals)
+            raise TypeError, 'use value= for Scalar-type slots' if shape.scalar?
+
+            self.lex_values = vals.map do |val|
+              Slot.shrink_wrap(
+                active: true,
+                value: {
+                  interpretedValue: val,
+                  originalValue: val,
+                  resolvedValues: [val]
+                }
+              )
+            end
+          end
+
+          def values
+            raise TypeError, 'use value for Scalar-type slots' if shape.scalar?
+
+            lex_values.map(&:value)
           end
 
           def active?
@@ -25,42 +65,27 @@ module Aws
           end
 
           def filled?
-            value.to_s != ''
+            shape.list? ? values.any? : value != '' && !value.nil?
           end
 
           def blank?
             !filled?
           end
 
-          def value=(other)
-            @value = other
-            current_intent.raw_slots[name] = @value
-          end
-
           def resolve!(index: 0)
-            self.value = resolved(index: index)
-          end
+            return if shape.list?
 
-          def resolved(index: 0)
-            details.resolutions.fetch(index) { SlotResolution.new(value: value) }.value
-          end
-
-          def original_value
-            details.original_value
+            lex_value.resolve!(index: index)
           end
 
           def resolvable?
-            details.resolutions.any?
+            return false if shape.list?
+
+            lex_value.resolvable?
           end
 
           def requestable?
             active? && blank?
-          end
-
-          def details
-            @details ||= current_intent.slot_details.fetch(name.to_sym) do
-              SlotDetail.new(name: name, resolutions: [], original_value: value)
-            end
           end
         end
       end

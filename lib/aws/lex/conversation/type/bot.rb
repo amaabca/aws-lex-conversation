@@ -7,8 +7,10 @@ module Aws
         class Bot
           include Base
 
+          required :alias_id
+          required :id
+          required :locale_id
           required :name
-          required :alias
           required :version
         end
       end

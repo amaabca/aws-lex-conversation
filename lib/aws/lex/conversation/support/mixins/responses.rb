@@ -8,52 +8,52 @@ module Aws
           module Responses
             def close(opts = {})
               params = {
-                active_contexts: lex.active_contexts,
-                recent_intent_summary_view: pending_checkpoints,
-                session_attributes: lex.session_attributes
+                session_state: lex.session_state,
+                request_attributes: lex.request_attributes
               }.merge(opts)
               Response::Close.new(params).to_lex
             end
 
             def confirm_intent(opts = {})
               params = {
-                active_contexts: lex.active_contexts,
-                intent_name: lex.current_intent.name,
-                recent_intent_summary_view: pending_checkpoints,
-                session_attributes: lex.session_attributes,
-                slots: lex.current_intent.slots
+                session_state: lex.session_state,
+                request_attributes: lex.request_attributes
               }.merge(opts)
               Response::ConfirmIntent.new(params).to_lex
             end
 
             def delegate(opts = {})
               params = {
-                active_contexts: lex.active_contexts,
-                recent_intent_summary_view: pending_checkpoints,
-                session_attributes: lex.session_attributes,
-                slots: lex.current_intent.slots
+                session_state: lex.session_state,
+                request_attributes: lex.request_attributes
               }.merge(opts)
               Response::Delegate.new(params).to_lex
             end
 
             def elicit_intent(opts = {})
               params = {
-                active_contexts: lex.active_contexts,
-                recent_intent_summary_view: pending_checkpoints,
-                session_attributes: lex.session_attributes
+                session_state: lex.session_state,
+                request_attributes: lex.request_attributes
               }.merge(opts)
               Response::ElicitIntent.new(params).to_lex
             end
 
             def elicit_slot(opts = {})
               params = {
-                active_contexts: lex.active_contexts,
-                intent_name: lex.current_intent.name,
-                recent_intent_summary_view: pending_checkpoints,
-                session_attributes: lex.session_attributes,
-                slots: lex.current_intent.slots
+                session_state: lex.session_state,
+                request_attributes: lex.request_attributes,
+                intent_name: lex.session_state.intent.name
               }.merge(opts)
+              lex.session_state.intent = find_intent_by_name(name: params.fetch(:intent_name))
               Response::ElicitSlot.new(params).to_lex
+            end
+
+            private
+
+            def find_intent_by_name(name:)
+              lex.session_state.intent = lex.intents.find(-> { raise ArgumentError, 'intent not found' }) do |intent|
+                intent.name == name
+              end
             end
           end
         end

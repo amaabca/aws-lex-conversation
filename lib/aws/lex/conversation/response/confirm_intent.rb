@@ -5,24 +5,15 @@ module Aws
     class Conversation
       module Response
         class ConfirmIntent < Base
-          attr_accessor :intent_name, :message, :response_card, :slots
-
           def initialize(opts = {})
             super
-            self.intent_name = opts.fetch(:intent_name)
-            self.slots = opts[:slots]
-            self.message = opts[:message]
-            self.response_card = opts[:response_card]
+            session_state.dialog_action = dialog_action
           end
 
           def dialog_action
-            {
-              type: 'ConfirmIntent',
-              intentName: intent_name,
-              slots: slots,
-              message: message,
-              responseCard: response_card
-            }.compact
+            Aws::Lex::Conversation::Type::DialogAction.shrink_wrap(
+              type: 'ConfirmIntent'
+            )
           end
         end
       end

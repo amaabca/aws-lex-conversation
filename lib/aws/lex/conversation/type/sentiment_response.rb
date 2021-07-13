@@ -7,12 +7,12 @@ module Aws
         class SentimentResponse
           include Base
 
-          required :sentiment_label
+          required :sentiment
           required :sentiment_score
 
           coerce(
-            sentiment_label: SentimentLabel,
-            sentiment_score: ->(v) { SentimentScore.parse_string(v) }
+            sentiment_label: Sentiment,
+            sentiment_score: SentimentScore
           )
         end
       end

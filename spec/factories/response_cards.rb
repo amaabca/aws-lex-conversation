@@ -2,15 +2,17 @@
 
 FactoryBot.define do
   factory :response_card, class: Aws::Lex::Conversation::Type::ResponseCard do
-    version { 1 }
-    content_type { build(:response_card_content_type) }
-    generic_attachments { build_list(:response_card_generic_attachment, 1) }
+    title { 'Title' }
+    sub_title { 'Sub Title' }
+    image_url { 'https://example.com/image.jpg' }
+    buttons { build_list(:response_card_button, 1) }
 
     initialize_with do
       new(
-        version: version,
-        content_type: content_type,
-        generic_attachments: generic_attachments
+        title: title,
+        sub_title: sub_title,
+        image_url: image_url,
+        buttons: buttons
       )
     end
   end

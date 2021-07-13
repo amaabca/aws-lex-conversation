@@ -7,36 +7,43 @@ module Aws
         class Event
           include Base
 
-          required :active_contexts, default: -> { [] }
-          required :alternative_intents, default: -> { [] }
-          required :current_intent
           required :bot
-          required :user_id
+          required :input_mode
           required :input_transcript
+          required :interpretations
           required :invocation_source
-          required :output_dialog_mode
           required :message_version
-          required :session_attributes, default: -> { {} }
-          required :recent_intent_summary_view, default: -> { [] }
-          required :request_attributes, default: -> { {} }
-          optional :sentiment_response
-          optional :kendra_response
+          required :request_attributes
+          required :response_content_type
+          required :session_id
+          required :session_state
+
+          computed_property :current_intent, ->(instance) do
+            instance.session_state.intent.tap do |intent|
+              intent.nlu_confidence = instance.interpretations.find { |i| i.intent.name == intent.name }.nlu_confidence
+            end
+          end
 
           computed_property :intents, ->(instance) do
-            [instance.current_intent] | instance.alternative_intents
+            instance.interpretations.map(&:intent).tap do |intents|
+              intents.map do |intent|
+                intent.nlu_confidence = instance.interpretations.find { |i| i.intent.name == intent.name }.nlu_confidence
+              end
+            end
+          end
+
+          computed_property :alternate_intents, ->(instance) do
+            instance.intents.reject { |intent| intent.name == instance.current_intent.name }
           end
 
           coerce(
-            active_contexts: Array[Context],
-            alternative_intents: Array[Intent],
-            current_intent: Intent,
             bot: Bot,
+            input_mode: InputMode,
+            interpretations: Array[Interpretation],
             invocation_source: InvocationSource,
-            output_dialog_mode: OutputDialogMode,
-            session_attributes: symbolize_hash!,
             request_attributes: symbolize_hash!,
-            recent_intent_summary_view: Array[RecentIntentSummaryView],
-            sentiment_response: SentimentResponse
+            response_content_type: Message::ContentType,
+            session_state: SessionState
           )
         end
       end

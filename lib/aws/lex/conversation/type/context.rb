@@ -7,13 +7,13 @@ module Aws
         class Context
           include Base
 
-          required :time_to_live
+          required :context_attributes
           required :name
-          required :parameters
+          required :time_to_live
 
           coerce(
-            time_to_live: TimeToLive,
-            parameters: symbolize_hash!
+            context_attributes: symbolize_hash!,
+            time_to_live: TimeToLive
           )
         end
       end
