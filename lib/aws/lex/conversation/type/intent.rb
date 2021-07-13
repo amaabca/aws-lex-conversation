@@ -10,7 +10,7 @@ module Aws
           required :confirmation_state
           optional :kendra_response
           required :name
-          required :raw_slots, from: :slots, virtual: true
+          required :raw_slots, from: :slots, virtual: true, default: -> { [] }
           required :state
           optional :originating_request_id
           optional :nlu_confidence
@@ -21,7 +21,7 @@ module Aws
               Slot.shrink_wrap(active: false, name: key.to_sym, value: nil, shape: 'Scalar')
             end
 
-            instance.raw_slots.each_with_object(default_hash) do |(key, value), hash|
+            Hash(instance.raw_slots).each_with_object(default_hash) do |(key, value), hash|
               value ||= { shape: 'Scalar' }
               hash[key.to_sym] = Slot.shrink_wrap(
                 active: true,
