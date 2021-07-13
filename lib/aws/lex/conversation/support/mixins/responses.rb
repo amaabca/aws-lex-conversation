@@ -17,8 +17,10 @@ module Aws
             def confirm_intent(opts = {})
               params = {
                 session_state: lex.session_state,
-                request_attributes: lex.request_attributes
+                request_attributes: lex.request_attributes,
+                intent_name: lex.session_state.intent.name
               }.merge(opts)
+              lex.session_state.intent = find_intent_by_name(name: params.fetch(:intent_name))
               Response::ConfirmIntent.new(params).to_lex
             end
 

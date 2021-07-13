@@ -22,6 +22,7 @@ module Aws
             end
 
             instance.raw_slots.each_with_object(default_hash) do |(key, value), hash|
+              value ||= { shape: 'Scalar' }
               hash[key.to_sym] = Slot.shrink_wrap(
                 active: true,
                 name: key,

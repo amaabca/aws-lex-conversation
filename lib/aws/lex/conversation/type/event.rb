@@ -13,7 +13,7 @@ module Aws
           required :interpretations
           required :invocation_source
           required :message_version
-          required :request_attributes
+          required :request_attributes, default: -> { {} }
           required :response_content_type
           required :session_id
           required :session_state

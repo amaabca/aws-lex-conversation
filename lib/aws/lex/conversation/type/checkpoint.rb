@@ -19,6 +19,7 @@ module Aws
             fulfillment_state: FulfillmentState
           )
 
+          # rubocop:disable Metrics/MethodLength
           def restore(conversation, opts = {})
             case dialog_action_type.raw
             when 'Close'
@@ -28,6 +29,7 @@ module Aws
               )
             when 'ConfirmIntent'
               conversation.confirm_intent(
+                intent_name: intent_name,
                 messages: opts.fetch(:messages)
               )
             when 'Delegate'
@@ -46,6 +48,7 @@ module Aws
               raise ArgumentError, "invalid DialogActionType: `#{dialog_action_type.raw}`"
             end
           end
+          # rubocop:enable Metrics/MethodLength
         end
       end
     end
