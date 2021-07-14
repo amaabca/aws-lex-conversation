@@ -7,8 +7,8 @@ module Aws
         class SlotValue
           include Base
 
-          required :original_value, default: -> { '' }
-          required :interpreted_value, default: -> { '' }
+          optional :original_value
+          optional :interpreted_value
           required :resolved_values, default: -> { [] }
 
           alias_method :value, :interpreted_value

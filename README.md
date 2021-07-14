@@ -93,7 +93,7 @@ class SayHello < Aws::Lex::Conversation::Handler::Base
     #
     # conversation.close(
     #   fulfillment_state: 'Fulfilled',
-    #   message: { content: "Hello, #{name}!", contentType: 'PlainText' }
+    #   messages: [{ content: "Hello, #{name}!", contentType: 'PlainText' }]
     # )
     #
     conversation.close(

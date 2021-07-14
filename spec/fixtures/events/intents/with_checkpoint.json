@@ -41,7 +41,7 @@
       "foo": "NO",
       "bar": "231234215125",
       "baz": "Apples",
-      "checkpoints": "W3siZGlhbG9nQWN0aW9uVHlwZSI6IkVsaWNpdFNsb3QiLCJpbnRlbnROYW1lIjoiTGV4X0ludGVudF9FY2hvIiwibGFiZWwiOiJzYXZlUG9pbnQiLCJmdWxmaWxsbWVudFN0YXRlIjpudWxsLCJzbG90VG9FbGljaXQiOm51bGx9XQ"
+      "checkpoints": "W3siZGlhbG9nQWN0aW9uVHlwZSI6IkVsaWNpdFNsb3QiLCJpbnRlbnQiOnsiY29uZmlybWF0aW9uU3RhdGUiOiJOb25lIiwia2VuZHJhUmVzcG9uc2UiOm51bGwsIm5hbWUiOiJMZXhfSW50ZW50X0VjaG8iLCJzdGF0ZSI6IlJlYWR5Rm9yRnVsZmlsbG1lbnQiLCJvcmlnaW5hdGluZ1JlcXVlc3RJZCI6bnVsbCwibmx1Q29uZmlkZW5jZSI6MS4wLCJzbG90cyI6eyJIYXNBQ2F0Ijp7InNoYXBlIjoiU2NhbGFyIiwidmFsdWUiOnsib3JpZ2luYWxWYWx1ZSI6InllcyIsImludGVycHJldGVkVmFsdWUiOiJZZXMiLCJyZXNvbHZlZFZhbHVlcyI6WyJZZXMiXX0sInZhbHVlcyI6W119fX0sImxhYmVsIjoic2F2ZVBvaW50IiwiZnVsZmlsbG1lbnRTdGF0ZSI6bnVsbCwic2xvdFRvRWxpY2l0IjpudWxsfV0"
     },
     "activeContexts": [],
     "intent": {

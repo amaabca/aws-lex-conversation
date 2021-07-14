@@ -8,17 +8,19 @@ module Aws
           include Base
 
           required :dialog_action_type
-          required :intent_name
+          required :intent
 
           optional :label
           optional :fulfillment_state
           optional :slot_to_elicit
 
           coerce(
+            intent: Intent,
             dialog_action_type: DialogActionType,
             fulfillment_state: FulfillmentState
           )
 
+          # rubocop:disable Metrics/MethodLength
           def restore(conversation, opts = {})
             case dialog_action_type.raw
             when 'Close'
@@ -28,6 +30,7 @@ module Aws
               )
             when 'ConfirmIntent'
               conversation.confirm_intent(
+                intent: intent,
                 messages: opts.fetch(:messages)
               )
             when 'Delegate'
@@ -38,7 +41,7 @@ module Aws
               )
             when 'ElicitSlot'
               conversation.elicit_slot(
-                intent_name: intent_name,
+                intent: intent,
                 messages: opts.fetch(:messages),
                 slot_to_elicit: slot_to_elicit
               )
@@ -46,6 +49,7 @@ module Aws
               raise ArgumentError, "invalid DialogActionType: `#{dialog_action_type.raw}`"
             end
           end
+          # rubocop:enable Metrics/MethodLength
         end
       end
     end

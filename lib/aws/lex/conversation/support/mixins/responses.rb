@@ -17,8 +17,10 @@ module Aws
             def confirm_intent(opts = {})
               params = {
                 session_state: lex.session_state,
-                request_attributes: lex.request_attributes
+                request_attributes: lex.request_attributes,
+                intent: lex.current_intent
               }.merge(opts)
+              lex.session_state.intent = params.fetch(:intent)
               Response::ConfirmIntent.new(params).to_lex
             end
 
@@ -42,18 +44,10 @@ module Aws
               params = {
                 session_state: lex.session_state,
                 request_attributes: lex.request_attributes,
-                intent_name: lex.session_state.intent.name
+                intent: lex.current_intent
               }.merge(opts)
-              lex.session_state.intent = find_intent_by_name(name: params.fetch(:intent_name))
+              lex.session_state.intent = params.fetch(:intent)
               Response::ElicitSlot.new(params).to_lex
-            end
-
-            private
-
-            def find_intent_by_name(name:)
-              lex.session_state.intent = lex.intents.find(-> { raise ArgumentError, 'intent not found' }) do |intent|
-                intent.name == name
-              end
             end
           end
         end
