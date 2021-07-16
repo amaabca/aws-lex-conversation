@@ -14,6 +14,14 @@ module Aws
           alias_method :value, :interpreted_value
           alias_method :value=, :interpreted_value=
 
+          def to_lex
+            {
+              interpretedValue: interpreted_value,
+              originalValue: original_value,
+              resolvedValues: resolved_values
+            }
+          end
+
           def resolve!(index: 0)
             self.interpreted_value = resolved(index: index)
           end

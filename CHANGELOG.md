@@ -1,3 +1,41 @@
+# 4.0.1 - July 16, 2021
+
+* Fix a bug with the `Aws::Lex::Conversation::Handler::Echo` class because it
+  didn't correctly return an array of messages required for Lex V2.
+* Drop a call to `Hash#deep_symbolize_keys` so we don't implicitly rely on
+  ActiveSupport.
+* Call `Hash#compact` when transforming a Lex response so we don't include any
+  `nil` values in the response.
+
+# 4.0.0 - July 14, 2021
+
+**breaking change** - Drop support for the Lex runtime version 1. If you are using Lex Version 1, please lock this gem to `~> 3.0.0`.
+**breaking change** - Implement support and types for [Lex Version 2](https://docs.aws.amazon.com/lexv2/latest/dg/what-is.html), which implements a new Lambda [input/output event format](https://docs.aws.amazon.com/lexv2/latest/dg/lambda.html#lambda-input-format).
+
+# 3.1.0 - June 1, 2021
+
+* Default both `request_attributes` and `session_attributes`
+  to an empty Hash when the values from the event are `null`.
+  It is much easier to reason and write logic when you can
+  assume that these values are always at least a hash.
+
+# 3.0.0 - May 20, 2021
+
+* **breaking change** - Don't pass the `recentIntentSummaryView` back
+  in the Lex response unless we have modified or added an existing
+  checkpoint. Lex will persist the previous intent summary/history
+  if we do not send a `recentIntentSummaryView` value back in the
+  response (see [1]).
+* Add a few helper methods to the `Aws::Lex::Conversation::Type::Slot`
+  instances:
+
+  - `active?`: returns true if the slot is defined (either optional or
+             required) for the current intent.
+  - `requestable?`: returns true if the slot is active for the current
+                  intent and it is not filled.
+
+[1]: https://docs.aws.amazon.com/lex/latest/dg/lambda-input-response-format.html#lambda-response-recentIntentSummaryView
+
 # 2.0.0 - August 19, 2020
 
 * **breaking change:** Rename `Aws::Lex::Conversation::Type::CurrentIntent` to `Aws::Lex::Conversation::Type::Intent`.

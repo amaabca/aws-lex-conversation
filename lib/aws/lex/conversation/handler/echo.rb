@@ -11,10 +11,12 @@ module Aws
             fulfillment_state = options.fetch(:fulfillment_state) { Type::FulfillmentState.new('Fulfilled') }
             conversation.close(
               fulfillment_state: fulfillment_state,
-              message: Type::Message.new(
-                content: content,
-                content_type: content_type
-              )
+              messages: [
+                Type::Message.new(
+                  content: content,
+                  content_type: content_type
+                )
+              ]
             )
           end
         end

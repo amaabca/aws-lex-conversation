@@ -16,7 +16,7 @@ module Aws
             active_contexts: Array[Context],
             dialog_action: DialogAction,
             intent: Intent,
-            session_attributes: ->(v) { SessionAttributes[v.deep_symbolize_keys] }
+            session_attributes: ->(v) { SessionAttributes[v.transform_keys(&:to_sym)] }
           )
         end
       end
