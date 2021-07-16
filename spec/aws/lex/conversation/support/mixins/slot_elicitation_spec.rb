@@ -69,10 +69,8 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
               },
               intent: {
                 confirmationState: 'None',
-                kendraResponse: nil,
                 name: 'Lex_Intent_Echo',
                 nluConfidence: 1.0,
-                originatingRequestId: nil,
                 slots: {
                   HasACat: {
                     shape: 'Scalar',
@@ -112,15 +110,12 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
               sessionState: {
                 activeContexts: [],
                 dialogAction: {
-                  slotToElicit: nil,
                   type: 'Close'
                 },
                 intent: {
                   confirmationState: 'None',
-                  kendraResponse: nil,
                   name: 'Lex_Intent_Echo',
                   nluConfidence: 1.0,
-                  originatingRequestId: nil,
                   slots: {
                     HasACat: {
                       shape: 'Scalar',
@@ -167,10 +162,8 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
               },
               intent: {
                 confirmationState: 'None',
-                kendraResponse: nil,
                 name: 'Lex_Intent_Echo',
                 nluConfidence: 1.0,
-                originatingRequestId: nil,
                 slots: {
                   HasACat: {
                     shape: 'Scalar',

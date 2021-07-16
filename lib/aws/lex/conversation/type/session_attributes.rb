@@ -10,12 +10,10 @@ module Aws
           optional :checkpoints
 
           def checkpoints
-            @checkpoints ||= begin # rubocop:disable Style/RedundantBegin
-              JSON.parse(
-                Base64.urlsafe_decode64(fetch(:checkpoints) { Base64.urlsafe_encode64([].to_json, padding: false) })
-              ).map do |checkpoint|
-                Checkpoint.shrink_wrap(checkpoint)
-              end
+            @checkpoints ||= JSON.parse(
+              Base64.urlsafe_decode64(fetch(:checkpoints) { Base64.urlsafe_encode64([].to_json, padding: false) })
+            ).map do |checkpoint|
+              Checkpoint.shrink_wrap(checkpoint)
             end
           end
 
