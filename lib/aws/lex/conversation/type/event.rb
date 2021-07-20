@@ -9,7 +9,7 @@ module Aws
 
           required :bot
           required :input_mode
-          required :input_transcript
+          required :input_transcript, default: -> { '' }
           required :interpretations
           required :invocation_source
           required :message_version
