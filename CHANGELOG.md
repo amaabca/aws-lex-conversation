@@ -1,3 +1,9 @@
+# 4.1.0 - July 21, 2021
+
+* Don't set the `intent` property in the response for `ElicitIntent`
+  actions as the field is optional as per [AWS documentation](https://docs.aws.amazon.com/lexv2/latest/dg/lambda.html#lambda-response-format).
+* Add `InProgress` and `ReadyForFulfillment` enumerations to `FulfillmentState`.
+
 # 4.0.1 - July 16, 2021
 
 * Fix a bug with the `Aws::Lex::Conversation::Handler::Echo` class because it

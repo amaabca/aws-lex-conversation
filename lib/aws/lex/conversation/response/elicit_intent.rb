@@ -10,6 +10,8 @@ module Aws
           def initialize(opts = {})
             super
             session_state.dialog_action = dialog_action
+            # by default, we set intent as nil unless overridden
+            session_state.intent = opts[:intent]
           end
 
           def dialog_action

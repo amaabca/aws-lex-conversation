@@ -9,6 +9,8 @@ module Aws
 
           enumeration('Fulfilled')
           enumeration('Failed')
+          enumeration('InProgress')
+          enumeration('ReadyForFulfillment')
         end
       end
     end
