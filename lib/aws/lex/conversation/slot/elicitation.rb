@@ -29,11 +29,15 @@ module Aws
               slot_to_elicit: name,
               messages: [
                 {
-                  contentType: content_type,
+                  contentType: message_content_type,
                   content: elicitation_content
                 }
               ]
             )
+          end
+
+          def message_content_type
+            content_type.is_a?(Proc) ? content_type.call(conversation) : content_type
           end
 
           def elicit?
