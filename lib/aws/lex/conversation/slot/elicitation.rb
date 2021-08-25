@@ -28,10 +28,7 @@ module Aws
             conversation.elicit_slot(
               slot_to_elicit: name,
               messages: [
-                {
-                  contentType: message_content_type,
-                  content: elicitation_content
-                }
+                elicitation_message
               ]
             )
           end
@@ -50,12 +47,21 @@ module Aws
             conversation.slots[name.to_sym]
           end
 
-          def elicitation_content
+          def elicitation_message
             first_elicitation? ? compose_message(message) : compose_message(follow_up_message)
           end
 
           def compose_message(msg)
-            msg.is_a?(Proc) ? msg.call(conversation) : msg
+            content = msg.is_a?(Proc) ? msg.call(conversation) : msg
+
+            if content.is_a?(Aws::Lex::Conversation::Type::Message)
+              content
+            else
+              {
+                content: content,
+                contentType: message_content_type
+              }
+            end
           end
 
           def increment_slot_elicitations!

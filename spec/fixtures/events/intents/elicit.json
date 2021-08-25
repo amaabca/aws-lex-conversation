@@ -1,0 +1,97 @@
+{
+  "sessionId": "1234",
+  "requestAttributes": {},
+  "inputTranscript": "waffle",
+  "interpretations": [
+    {
+      "intent": {
+        "slots": {
+          "HasACat": {
+            "shape": "Scalar",
+            "value": null
+          }
+        },
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_A",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 1,
+      "sentimentResponse": {
+        "sentiment": "NEUTRAL",
+        "sentimentScore": {
+          "mixed": 1.3306875E-5,
+          "negative": 0.0038302848,
+          "neutral": 0.9676958,
+          "positive": 0.028460732
+        }
+      }
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_FallbackIntent",
+        "state": "ReadyForFulfillment"
+      }
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_B",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 0.58
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_C",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 0.45
+    },
+    {
+      "intent": {
+        "slots": {},
+        "confirmationState": "None",
+        "name": "Lex_V2_Intent_D",
+        "state": "ReadyForFulfillment"
+      },
+      "nluConfidence": 0.43
+    }
+  ],
+  "responseContentType": "text/plain; charset=utf-8",
+  "invocationSource": "DialogCodeHook",
+  "messageVersion": "1.0",
+  "sessionState": {
+    "sessionAttributes": {
+      "foo": "NO",
+      "bar": "231234215125",
+      "baz": "Apples"
+    },
+    "activeContexts": [],
+    "intent": {
+      "slots": {
+        "HasACat": {
+          "shape": "Scalar",
+          "value": null
+        }
+      },
+      "confirmationState": "None",
+      "name": "Lex_V2_Intent_A",
+      "state": "InProgress"
+    },
+    "originatingRequestId": "d6349818-c9a1-463e-b8e6-7fcdc5169b71"
+  },
+  "inputMode": "Text",
+  "bot": {
+    "aliasName": "TestBotAlias",
+    "aliasId": "TSTALIASID",
+    "name": "LexBot",
+    "version": "DRAFT",
+    "localeId": "en_US",
+    "id": "YR23299542f"
+  }
+}
