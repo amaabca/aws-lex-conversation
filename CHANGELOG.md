@@ -1,3 +1,7 @@
+# 4.3.0 - August 25, 2021
+
+* Slot elicitor can now be passed an Aws::Lex::Conversation::Type::Message as part of the DSL/callback and properly formats the response as such
+
 # 4.1.0 - July 21, 2021
 
 * Don't set the `intent` property in the response for `ElicitIntent`
