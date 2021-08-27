@@ -5,13 +5,21 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
   let(:lambda_context) { build(:context) }
   let(:conversation) { Aws::Lex::Conversation.new(event: event, context: lambda_context) }
 
+  let(:follow_up_messages) do
+    [
+      Aws::Lex::Conversation::Type::Message.new(
+        content: 'Do you have a feline?',
+        content_type: 'PlainText'
+      )
+    ]
+  end
+
   subject do
     described_class.new(
       name: 'HasACat',
       maximum_elicitations: 1,
-      message: message,
-      content_type: 'PlainText',
-      follow_up_message: 'Do you have a feline?',
+      messages: messages,
+      follow_up_messages: follow_up_messages,
       fallback: fallback
     )
   end
@@ -21,7 +29,14 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
   end
 
   describe '#elicit!' do
-    let(:message) { 'Do you have a cat?' }
+    let(:messages) do
+      [
+        Aws::Lex::Conversation::Type::Message.new(
+          content: 'Do you have a cat?',
+          content_type: 'PlainText'
+        )
+      ]
+    end
     let(:fallback) do
       ->(c) do
         c.close(
@@ -42,17 +57,19 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
       end
 
       context 'when the message is an instance of Aws::Lex::Conversation::Type::Message' do
-        let(:message) do
+        let(:messages) do
           ->(_) do
-            Aws::Lex::Conversation::Type::Message.new(
-              content: '<speak>Do you have a cat?</speak>',
-              contentType: 'SSML'
-            )
+            [
+              Aws::Lex::Conversation::Type::Message.new(
+                content: 'Do you have a cat?',
+                content_type: 'PlainText'
+              )
+            ]
           end
         end
 
         it 'returns the first elicitation message' do
-          expect(subject.elicit![:messages][0][:content]).to eq('<speak>Do you have a cat?</speak>')
+          expect(subject.elicit![:messages][0][:content]).to eq('Do you have a cat?')
         end
       end
     end
@@ -80,26 +97,36 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
       end
 
       context 'when the fallback callback returns an Aws::Lex::Conversation::Type::Message' do
-        let(:fallback) do
-          ->(c) do
-            c.close(
-              fulfillment_state: 'Failed',
-              messages: [
-                Aws::Lex::Conversation::Type::Message.new(
-                  content: '<speak>Fallback</speak>',
-                  content_type: Aws::Lex::Conversation::Type::Message::ContentType.new('SSML')
-                )
-              ]
-            )
+        context 'when there is a fallback' do
+          let(:fallback) do
+            ->(c) do
+              c.close(
+                fulfillment_state: 'Failed',
+                messages: [
+                  Aws::Lex::Conversation::Type::Message.new(
+                    content: '<speak>Fallback</speak>',
+                    content_type: Aws::Lex::Conversation::Type::Message::ContentType.new('SSML')
+                  )
+                ]
+              )
+            end
+          end
+
+          it 'returns the fallback content' do
+            response = subject.elicit!
+
+            expect(response[:messages][0][:content]).to eq('<speak>Fallback</speak>')
+            expect(response[:messages][0][:contentType]).to eq('SSML')
+            expect(response[:sessionState][:dialogAction][:type]).to eq('Close')
           end
         end
 
-        it 'returns the fallback content' do
-          response = subject.elicit!
+        context 'when there is not a fallback' do
+          let(:fallback) { nil }
 
-          expect(response[:messages][0][:content]).to eq('<speak>Fallback</speak>')
-          expect(response[:messages][0][:contentType]).to eq('SSML')
-          expect(response[:sessionState][:dialogAction][:type]).to eq('Close')
+          it 'will not elicit' do
+            expect(subject.elicit!).to eq(false)
+          end
         end
       end
     end

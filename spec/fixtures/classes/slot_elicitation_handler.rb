@@ -5,8 +5,18 @@ class SlotElicitationHandler < Aws::Lex::Conversation::Handler::Echo
 
   slot name: 'HasACat',
        elicit: ->(conversation) { conversation.session[:elicit_slot] == true },
-       message: 'Do you have a cat?',
-       follow_up_message: 'Sorry, I did not understand you. Do you have a cat?',
+       messages: [
+         Aws::Lex::Conversation::Type::Message.new(
+           content: 'Do you have a cat?',
+           content_type: 'PlainText'
+         )
+       ],
+       follow_up_messages: [
+         Aws::Lex::Conversation::Type::Message.new(
+           content: 'Sorry, I did not understand you. Do you have a cat?',
+           content_type: 'PlainText'
+         )
+       ],
        fallback: ->(conversation) do
          conversation.close(
            fulfillment_state: 'Failed',
