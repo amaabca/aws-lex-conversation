@@ -5,39 +5,32 @@ module Aws
     class Conversation
       module Slot
         class Elicitation
-          attr_accessor :name, :elicit, :message, :follow_up_message,
-                        :content_type, :fallback, :maximum_elicitations,
-                        :conversation
+          attr_accessor :name, :elicit, :messages, :follow_up_messages,
+                        :fallback, :maximum_elicitations, :conversation
 
           def initialize(opts = {})
             self.name = opts.fetch(:name)
             self.elicit = opts.fetch(:elicit) { ->(_c) { true } }
-            self.message = opts.fetch(:message)
-            self.follow_up_message = opts.fetch(:follow_up_message) { opts.fetch(:message) }
-            self.content_type = opts.fetch(:content_type) do
-              Aws::Lex::Conversation::Type::Message::ContentType.new('PlainText')
-            end
-            self.fallback = opts.fetch(:fallback) { ->(_c) {} }
+            self.messages = opts.fetch(:messages)
+            self.follow_up_messages = opts.fetch(:follow_up_messages) { opts.fetch(:messages) }
+            self.fallback = opts[:fallback]
             self.maximum_elicitations = opts.fetch(:maximum_elicitations) { 0 }
           end
 
           def elicit!
+            return false unless elicit?
             return fallback.call(conversation) if maximum_elicitations?
 
             increment_slot_elicitations!
             conversation.elicit_slot(
               slot_to_elicit: name,
-              messages: [
-                elicitation_message
-              ]
+              messages: elicitation_messages
             )
           end
 
-          def message_content_type
-            content_type.is_a?(Proc) ? content_type.call(conversation) : content_type
-          end
-
           def elicit?
+            return false if maximum_elicitations? && fallback.nil?
+
             elicit.call(conversation) && !slot.filled?
           end
 
@@ -47,21 +40,12 @@ module Aws
             conversation.slots[name.to_sym]
           end
 
-          def elicitation_message
-            first_elicitation? ? compose_message(message) : compose_message(follow_up_message)
+          def elicitation_messages
+            first_elicitation? ? compose_messages(messages) : compose_messages(follow_up_messages)
           end
 
-          def compose_message(msg)
-            content = msg.is_a?(Proc) ? msg.call(conversation) : msg
-
-            if content.is_a?(Aws::Lex::Conversation::Type::Message)
-              content
-            else
-              {
-                content: content,
-                contentType: message_content_type
-              }
-            end
+          def compose_messages(msg)
+            msg.is_a?(Proc) ? msg.call(conversation) : msg
           end
 
           def increment_slot_elicitations!
