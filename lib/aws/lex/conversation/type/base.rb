@@ -71,14 +71,19 @@ module Aws
               ->(v) { v.transform_keys(&:to_sym) }
             end
 
-            def computed_property(attribute, callable)
-              mapping[attribute] = attribute
+            def computed_property(attribute, opts = {}, &block)
               attr_writer(attribute)
+              
+              if opts.fetch(:virtual) { false }
+                virtual_attributes << attribute
+              else
+                mapping[attribute] = attribute
+              end
 
               # dynamically memoize the result
               define_method(attribute) do
                 instance_variable_get("@#{attribute}") ||
-                  instance_variable_set("@#{attribute}", callable.call(self))
+                  instance_variable_set("@#{attribute}", block.call(self))
               end
             end
 
