@@ -1,3 +1,73 @@
+# 6.0.0 - Sept 3, 2021
+
+* **breaking change** - Modify `Aws::Lex::Conversation::Type::Base#computed_property` to accept a block instead of a callable argument. This is an internal class and should not require any application-level changes.
+* **breaking change** - Add a required `alias_name` attribute on `Aws::Lex::Conversation::Type::Bot` instances. Please note that the Version 2 of AWS Lex correctly returns this value as input to lambda functions. Therefore no application-level changes are necessary.
+* Implement a new set of test helpers to make it easier to modify state and match test expectations. You can use the test helpers as follows:
+
+```ruby
+require 'aws/lex/conversation/spec'
+
+# include the custom matchers if you're using RSpec
+RSpec.configure do |config|
+  config.include(Aws::Lex::Conversation::Spec)
+end
+
+# we can now simulate state in a test somewhere
+let(:conversation) { Aws::Lex::Conversation.new(event: ..., context: ...) }
+
+it 'simulates a conversation' do
+  conversation
+    .simulate!                      # simulating state will modify the underlying instance
+    .transcript('My age is 21')     # optionally set an input transcript
+    .intent(name: 'MyCoolIntent')   # route to the intent named "MyCoolIntent"
+    .slot(name: 'Age', value: '21') # add a slot named "Age" with a corresponding value
+
+  expect(conversation).to have_transcript('My age is 21')
+  expect(conversation).to route_to_intent('MyCoolIntent')
+  expect(conversation).to have_slot(name: 'Age', value: '21')
+end
+
+# if you'd rather create your own event from scratch
+it 'creates an event' do
+  simulator = Aws::Lex::Conversation::Simulator.new
+  simulator
+    .transcript('I am 21 years old.')
+    .input_mode('Speech')
+    .context(name: 'WelcomeGreetingCompleted')
+    .invocation_source('FulfillmentCodeHook')
+    .session(username: 'jane.doe')
+    .intent(
+      name: 'GuessZodiacSign',
+      state: 'ReadyForFulfillment',
+      slots: {
+        age: {
+          value: '21'
+        }
+      }
+    )
+  event = simulator.event
+
+  expect(event).to have_transcript('I am 21 years old.')
+  expect(event).to have_input_mode('Speech')
+  expect(event).to have_active_context(name: 'WelcomeGreetingCompleted')
+  expect(event).to have_invocation_source('FulfillmentCodeHook')
+  expect(event).to route_to_intent('GuessZodiacSign')
+  expect(event).to have_slot(name: 'age', value: '21')
+  expect(event).to include_session_values(username: 'jane.doe')
+end
+```
+
+# 5.1.0 - Sept 2, 2021
+
+* Allow the intent to be specified when returning a response such as `elicit_slot`.
+
+# 5.0.0 - August 30, 2021
+
+* **breaking change** - `Aws::Lex::Conversation::Support::Mixins::SlotElicitation`
+  - Rename the `message` attribute to `messages`. This attribute must be a callable that returns and array of `Aws::Lex::Conversation::Type::Message` instances.
+  - rename the `follow_up_message` attribute to `follow_up_messages`. This must also be a callable that returns an array of message instances.
+* Allow the `fallback` callable in `SlotElicitation` to be nilable. The slot value will not be elicited if the value is nil and maximum attempts have been exceeded.
+
 # 4.3.0 - August 25, 2021
 
 * Slot elicitor can now be passed an Aws::Lex::Conversation::Type::Message as part of the DSL/callback and properly formats the response as such

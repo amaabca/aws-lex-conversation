@@ -20,12 +20,10 @@ describe Aws::Lex::Conversation::Type::Checkpoint do
           ]
         )
 
-        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Close')
-        expect(response[:messages].first).to eq(
-          {
-            content: 'Test',
-            contentType: 'PlainText'
-          }
+        expect(response).to have_action('Close')
+        expect(response).to have_message(
+          content: 'Test',
+          contentType: 'PlainText'
         )
       end
     end
@@ -44,12 +42,10 @@ describe Aws::Lex::Conversation::Type::Checkpoint do
           ]
         )
 
-        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('ConfirmIntent')
-        expect(response[:messages].first).to eq(
-          {
-            content: 'Test',
-            contentType: 'PlainText'
-          }
+        expect(response).to have_action('ConfirmIntent')
+        expect(response).to have_message(
+          content: 'Test',
+          contentType: 'PlainText'
         )
       end
     end
@@ -60,7 +56,7 @@ describe Aws::Lex::Conversation::Type::Checkpoint do
       it 'returns a delegate response' do
         response = subject.restore(conversation)
 
-        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Delegate')
+        expect(response).to have_action('Delegate')
       end
     end
 
@@ -78,12 +74,10 @@ describe Aws::Lex::Conversation::Type::Checkpoint do
           ]
         )
 
-        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('ElicitIntent')
-        expect(response[:messages].first).to eq(
-          {
-            content: 'Test',
-            contentType: 'PlainText'
-          }
+        expect(response).to have_action('ElicitIntent')
+        expect(response).to have_message(
+          content: 'Test',
+          contentType: 'PlainText'
         )
       end
     end
@@ -102,11 +96,8 @@ describe Aws::Lex::Conversation::Type::Checkpoint do
           ]
         )
 
-        expect(response.dig(:sessionState, :dialogAction)).to eq(
-          type: 'ElicitSlot',
-          slotToElicit: 'HasACat'
-        )
-        expect(response[:messages].first).to eq(
+        expect(response).to elicit_slot('HasACat')
+        expect(response).to have_message(
           {
             content: 'Test',
             contentType: 'PlainText'

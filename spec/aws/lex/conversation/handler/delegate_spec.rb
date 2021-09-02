@@ -9,7 +9,7 @@ describe Aws::Lex::Conversation::Handler::Delegate do
     let(:response) { subject.response(conversation) }
 
     it 'returns a delegate response' do
-      expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Delegate')
+      expect(response).to have_action('Delegate')
     end
   end
 end

@@ -30,7 +30,7 @@ describe Aws::Lex::Conversation::Handler::SlotResolution do
       end
 
       it 'returns the response from the successor' do
-        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Delegate')
+        expect(response).to have_action('Delegate')
       end
     end
   end

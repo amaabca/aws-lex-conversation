@@ -9,11 +9,16 @@ describe Aws::Lex::Conversation do
   describe '#checkpoint!' do
     context 'when an existing checkpoint does not exist' do
       before(:each) do
-        subject.lex.session_state.session_attributes.checkpoints = []
+        # set checkpoints to an empty array
+        subject.simulate!.session(checkpoints: 'W10')
       end
 
       it 'creates an element in session_attributes.checkpoints' do
-        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+        subject.checkpoint!(
+          label: 'savePoint',
+          dialog_action_type: 'ElicitSlot',
+          fulfillment_state: ''
+        )
 
         expect(subject.checkpoints.size).to eq(1)
       end
@@ -23,11 +28,19 @@ describe Aws::Lex::Conversation do
       let(:view) { subject.checkpoint(label: 'savePoint') }
 
       before(:each) do
-        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ElicitSlot', fulfillment_state: '')
+        subject.checkpoint!(
+          label: 'savePoint',
+          dialog_action_type: 'ElicitSlot',
+          fulfillment_state: ''
+        )
       end
 
       it 'updates the existing checkpoint in recentIntentSummaryView' do
-        subject.checkpoint!(label: 'savePoint', dialog_action_type: 'ConfirmIntent', fulfillment_state: '')
+        subject.checkpoint!(
+          label: 'savePoint',
+          dialog_action_type: 'ConfirmIntent',
+          fulfillment_state: ''
+        )
 
         expect(view.dialog_action_type).to eq('ConfirmIntent')
       end
@@ -100,7 +113,7 @@ describe Aws::Lex::Conversation do
       end
 
       it 'returns a close response' do
-        expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Close')
+        expect(response).to have_action('Close')
       end
     end
 
@@ -191,7 +204,7 @@ describe Aws::Lex::Conversation do
 
   describe '#session' do
     it 'returns the session attributes of the input event' do
-      expect(subject.session).to eq(
+      expect(subject).to include_session_values(
         bar: '231234215125',
         baz: 'Apples',
         foo: 'NO'

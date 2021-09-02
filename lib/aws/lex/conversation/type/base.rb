@@ -73,7 +73,7 @@ module Aws
 
             def computed_property(attribute, opts = {}, &block)
               attr_writer(attribute)
-              
+
               if opts.fetch(:virtual) { false }
                 virtual_attributes << attribute
               else

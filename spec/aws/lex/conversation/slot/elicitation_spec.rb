@@ -53,7 +53,7 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
 
     context 'with the first iteration' do
       it 'returns the first elicitation message' do
-        expect(subject.elicit![:messages][0][:content]).to eq('Do you have a cat?')
+        expect(subject.elicit!).to have_message(content: 'Do you have a cat?')
       end
 
       context 'when the message is an instance of Aws::Lex::Conversation::Type::Message' do
@@ -69,7 +69,7 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
         end
 
         it 'returns the first elicitation message' do
-          expect(subject.elicit![:messages][0][:content]).to eq('Do you have a cat?')
+          expect(subject.elicit!).to have_message(content: 'Do you have a cat?')
         end
       end
     end
@@ -80,7 +80,7 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
       end
 
       it 'returns the follow_up_message' do
-        expect(subject.elicit![:messages][0][:content]).to eq('Do you have a feline?')
+        expect(subject.elicit!).to have_message(content: 'Do you have a feline?')
       end
     end
 
@@ -92,8 +92,8 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
       it 'returns the fallback content' do
         response = subject.elicit!
 
-        expect(response[:messages][0][:content]).to eq('I give up.')
-        expect(response[:sessionState][:dialogAction][:type]).to eq('Close')
+        expect(response).to have_message(content: 'I give up.')
+        expect(response).to have_action('Close')
       end
 
       context 'when the fallback callback returns an Aws::Lex::Conversation::Type::Message' do
@@ -115,9 +115,11 @@ describe Aws::Lex::Conversation::Slot::Elicitation do
           it 'returns the fallback content' do
             response = subject.elicit!
 
-            expect(response[:messages][0][:content]).to eq('<speak>Fallback</speak>')
-            expect(response[:messages][0][:contentType]).to eq('SSML')
-            expect(response[:sessionState][:dialogAction][:type]).to eq('Close')
+            expect(response).to have_message(
+              content: '<speak>Fallback</speak>',
+              contentType: 'SSML'
+            )
+            expect(response).to have_action('Close')
           end
         end
 

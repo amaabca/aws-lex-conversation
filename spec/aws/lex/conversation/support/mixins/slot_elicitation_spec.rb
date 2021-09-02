@@ -78,8 +78,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                       interpretedValue: '',
                       originalValue: 'yes',
                       resolvedValues: ['Yes']
-                    },
-                    values: []
+                    }
                   }
                 },
                 state: 'ReadyForFulfillment'
@@ -123,8 +122,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                         interpretedValue: '',
                         originalValue: 'yes',
                         resolvedValues: ['Yes']
-                      },
-                      values: []
+                      }
                     }
                   },
                   state: 'Failed'
@@ -171,8 +169,7 @@ describe Aws::Lex::Conversation::Support::Mixins::SlotElicitation do
                       interpretedValue: nil,
                       originalValue: 'yes',
                       resolvedValues: ['Yes']
-                    },
-                    values: []
+                    }
                   }
                 },
                 state: 'ReadyForFulfillment'

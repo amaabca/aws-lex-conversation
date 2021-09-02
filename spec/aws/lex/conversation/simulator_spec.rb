@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Aws::Lex::Conversation::Simulator do
   describe '#event' do
     let(:event) { subject.event }
@@ -5,7 +7,14 @@ describe Aws::Lex::Conversation::Simulator do
     before(:each) do
       subject
         .transcript('My Waffles')
-        .intent(name: 'My_Intent')
+        .intent(
+          name: 'My_Intent',
+          slots: {
+            Age: {
+              value: '21'
+            }
+          }
+        )
         .interpretation(
           name: 'Something_Else',
           nlu_confidence: 0.40,
@@ -19,6 +28,8 @@ describe Aws::Lex::Conversation::Simulator do
             }
           }
         )
+        .bot(name: 'Winston')
+        .input_mode('Speech')
         .slot(name: 'MySlot', value: 'TEST')
         .context(name: 'waffle_is_hot')
         .invocation_source('DialogCodeHook')
@@ -40,8 +51,21 @@ describe Aws::Lex::Conversation::Simulator do
       expect(event).to have_invocation_source('DialogCodeHook')
     end
 
+    it 'sets the bot name' do
+      expect(event.dig(:bot, :name)).to eq('Winston')
+    end
+
     it 'adds an interpretation' do
       expect(event).to have_interpretation('Something_Else')
+    end
+
+    it 'adds slot values' do
+      expect(event).to have_slot(name: 'MySlot', value: 'TEST')
+      expect(event).to have_slot(name: 'Age', value: '21')
+    end
+
+    it 'sets the input mode' do
+      expect(event).to have_input_mode('Speech')
     end
   end
 end
