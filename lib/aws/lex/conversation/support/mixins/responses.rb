@@ -9,8 +9,10 @@ module Aws
             def close(opts = {})
               params = {
                 session_state: lex.session_state,
-                request_attributes: lex.request_attributes
+                request_attributes: lex.request_attributes,
+                intent: lex.current_intent
               }.merge(opts)
+              lex.session_state.intent = params.fetch(:intent)
               Response::Close.new(params).to_lex
             end
 
@@ -27,16 +29,20 @@ module Aws
             def delegate(opts = {})
               params = {
                 session_state: lex.session_state,
-                request_attributes: lex.request_attributes
+                request_attributes: lex.request_attributes,
+                intent: lex.current_intent
               }.merge(opts)
+              lex.session_state.intent = params.fetch(:intent)
               Response::Delegate.new(params).to_lex
             end
 
             def elicit_intent(opts = {})
               params = {
                 session_state: lex.session_state,
-                request_attributes: lex.request_attributes
+                request_attributes: lex.request_attributes,
+                intent: lex.current_intent
               }.merge(opts)
+              lex.session_state.intent = params.fetch(:intent)
               Response::ElicitIntent.new(params).to_lex
             end
 

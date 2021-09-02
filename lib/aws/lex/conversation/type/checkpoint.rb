@@ -20,11 +20,12 @@ module Aws
             fulfillment_state: FulfillmentState
           )
 
-          # rubocop:disable Metrics/MethodLength
+          # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           def restore(conversation, opts = {})
             case dialog_action_type.raw
             when 'Close'
               conversation.close(
+                intent: intent,
                 fulfillment_state: opts.fetch(:fulfillment_state) { fulfillment_state },
                 messages: opts.fetch(:messages)
               )
@@ -34,9 +35,12 @@ module Aws
                 messages: opts.fetch(:messages)
               )
             when 'Delegate'
-              conversation.delegate
+              conversation.delegate(
+                intent: intent
+              )
             when 'ElicitIntent'
               conversation.elicit_intent(
+                intent: intent,
                 messages: opts.fetch(:messages)
               )
             when 'ElicitSlot'
@@ -49,7 +53,7 @@ module Aws
               raise ArgumentError, "invalid DialogActionType: `#{dialog_action_type.raw}`"
             end
           end
-          # rubocop:enable Metrics/MethodLength
+          # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
         end
       end
     end
