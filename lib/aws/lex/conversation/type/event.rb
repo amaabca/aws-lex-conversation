@@ -20,14 +20,14 @@ module Aws
 
           computed_property(:current_intent, virtual: true) do |instance|
             instance.session_state.intent.tap do |intent|
-              intent.nlu_confidence = instance.interpretations.find { |i| i.intent.name == intent.name }.nlu_confidence
+              intent.nlu_confidence = instance.interpretations.find { |i| i.intent.name == intent.name }&.nlu_confidence
             end
           end
 
           computed_property(:intents, virutal: true) do |instance|
             instance.interpretations.map(&:intent).tap do |intents|
               intents.map do |intent|
-                intent.nlu_confidence = instance.interpretations.find { |i| i.intent.name == intent.name }.nlu_confidence
+                intent.nlu_confidence = instance.interpretations.find { |i| i.intent.name == intent.name }&.nlu_confidence
               end
             end
           end

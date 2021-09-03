@@ -21,6 +21,7 @@ module Aws
               sessionState: default_session_state
             )
           end
+          interpretation(name: 'SIMULATION')
         end
 
         def event
@@ -110,17 +111,17 @@ module Aws
         end
 
         def invocation_source(source)
-          lex.invocation_source = source
+          lex.invocation_source = Type::InvocationSource.new(source)
           self
         end
 
         def input_mode(mode)
-          lex.input_mode = mode
+          lex.input_mode = Type::InputMode.new(mode)
           self
         end
 
         def session(data)
-          lex.session_state.session_attributes = Type::SessionAttributes[data]
+          lex.session_state.session_attributes.merge!(Type::SessionAttributes[data])
           self
         end
 

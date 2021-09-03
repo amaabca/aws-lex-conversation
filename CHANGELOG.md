@@ -5,19 +5,18 @@
 * Implement a new set of test helpers to make it easier to modify state and match test expectations. You can use the test helpers as follows:
 
 ```ruby
+# we must explicitly require the test helpers
 require 'aws/lex/conversation/spec'
 
-# include the custom matchers if you're using RSpec
+# optional: include the custom matchers if you're using RSpec
 RSpec.configure do |config|
   config.include(Aws::Lex::Conversation::Spec)
 end
 
 # we can now simulate state in a test somewhere
-let(:conversation) { Aws::Lex::Conversation.new(event: ..., context: ...) }
-
 it 'simulates a conversation' do
-  conversation
-    .simulate!                      # simulating state will modify the underlying instance
+  conversation                      # given we have an instance of Aws::Lex::Conversation
+    .simulate!                      # simulation modifies the underlying instance
     .transcript('My age is 21')     # optionally set an input transcript
     .intent(name: 'MyCoolIntent')   # route to the intent named "MyCoolIntent"
     .slot(name: 'Age', value: '21') # add a slot named "Age" with a corresponding value

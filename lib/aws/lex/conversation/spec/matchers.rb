@@ -136,18 +136,21 @@ module Aws
 
           matcher(:have_slot) do |opts|
             name = opts.fetch(:name)
+            value = opts[:value]
+            values = value && [value]
             expected_slot = {
               shape: opts.fetch(:shape) { 'Scalar' },
               value: {
-                originalValue: opts.fetch(:original_value) { opts[:value] },
-                interpretedValue: opts.fetch(:interpreted_value) { opts[:value] },
-                resolvedValues: opts.fetch(:resolved_values) { [opts[:value]] }
-              }
+                originalValue: opts.fetch(:original_value, value),
+                interpretedValue: opts.fetch(:interpreted_value, value),
+                resolvedValues: opts.fetch(:resolved_values, values)
+              }.compact
             }
 
             match do |actual|
               slot = build_event(actual).dig(:sessionState, :intent, :slots, name.to_sym)
-              slot.slice(*expected_slot.keys) == expected_slot
+              slot[:shape] == expected_slot[:shape] &&
+                slot[:value].slice(*expected_slot[:value].keys) == expected_slot[:value]
             end
 
             # :nocov:
@@ -175,6 +178,22 @@ module Aws
 
             failure_message_when_negated do |actual|
               "expected #{build_event(actual).dig(:sessionState, :dialogAction, :type)} to not equal #{expected}"
+            end
+            # :nocov:
+          end
+
+          matcher(:have_intent_state) do |expected|
+            match do |actual|
+              build_event(actual).dig(:sessionState, :intent, :state) == expected
+            end
+
+            # :nocov:
+            failure_message do |actual|
+              "expected #{build_event(actual).dig(:sessionState, :intent, :state)} to equal #{expected}"
+            end
+
+            failure_message_when_negated do |actual|
+              "expected #{build_event(actual).dig(:sessionState, :intent, :state)} to not equal #{expected}"
             end
             # :nocov:
           end

@@ -9,6 +9,7 @@ describe Aws::Lex::Conversation::Simulator do
         .transcript('My Waffles')
         .intent(
           name: 'My_Intent',
+          state: 'InProgress',
           slots: {
             Age: {
               value: '21'
@@ -66,6 +67,10 @@ describe Aws::Lex::Conversation::Simulator do
 
     it 'sets the input mode' do
       expect(event).to have_input_mode('Speech')
+    end
+
+    it 'sets the intent state' do
+      expect(event).to have_intent_state('InProgress')
     end
   end
 end
