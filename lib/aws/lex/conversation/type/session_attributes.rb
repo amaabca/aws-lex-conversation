@@ -20,7 +20,7 @@ module Aws
           def to_lex
             merge(
               checkpoints: Base64.urlsafe_encode64(checkpoints.map(&:to_lex).to_json, padding: false)
-            )
+            ).to_h
           end
         end
       end
