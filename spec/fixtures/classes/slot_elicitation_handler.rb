@@ -28,5 +28,5 @@ class SlotElicitationHandler < Aws::Lex::Conversation::Handler::Echo
            ]
          )
        end,
-       maximum_elicitations: 2
+       max_retries: 2
 end

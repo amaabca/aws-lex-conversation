@@ -32,7 +32,7 @@ module Aws
           def value
             raise TypeError, 'use values for List-type slots' if shape.list?
 
-            lex_value.interpreted_value
+            lex_value&.interpreted_value
           end
 
           # takes an array of slot values

@@ -6,7 +6,7 @@ module Aws
       module Slot
         class Elicitation
           attr_accessor :name, :elicit, :messages, :follow_up_messages,
-                        :fallback, :maximum_elicitations, :conversation
+                        :fallback, :max_retries, :conversation
 
           def initialize(opts = {})
             self.name = opts.fetch(:name)
@@ -14,7 +14,7 @@ module Aws
             self.messages = opts.fetch(:messages)
             self.follow_up_messages = opts.fetch(:follow_up_messages) { opts.fetch(:messages) }
             self.fallback = opts[:fallback]
-            self.maximum_elicitations = opts.fetch(:maximum_elicitations) { 0 }
+            self.max_retries = opts[:max_retries] || opts[:maximum_elicitations] || 0
           end
 
           def elicit!
@@ -53,9 +53,7 @@ module Aws
           end
 
           def maximum_elicitations?
-            return false if maximum_elicitations.zero?
-
-            elicitation_attempts > maximum_elicitations
+            elicitation_attempts > max_retries
           end
 
           def first_elicitation?
