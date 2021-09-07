@@ -20,10 +20,7 @@ module Aws
           )
 
           def to_lex
-            super.merge(
-              value: transform_to_lex(lex_value),
-              values: transform_to_lex(lex_values)
-            )
+            super.merge(extra_response_attributes)
           end
 
           def value=(val)
@@ -86,6 +83,20 @@ module Aws
 
           def requestable?
             active? && blank?
+          end
+
+          private
+
+          def extra_response_attributes
+            if shape.list?
+              {
+                values: transform_to_lex(lex_values)
+              }
+            else
+              {
+                value: transform_to_lex(lex_value)
+              }
+            end
           end
         end
       end

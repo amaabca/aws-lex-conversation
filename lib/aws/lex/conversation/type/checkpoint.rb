@@ -20,6 +20,12 @@ module Aws
             fulfillment_state: FulfillmentState
           )
 
+          # restore the checkpoint AND remove it from session
+          def restore!(conversation, opts = {})
+            conversation.checkpoints.delete_if { |c| c.label == label }
+            restore(conversation, opts)
+          end
+
           # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           def restore(conversation, opts = {})
             case dialog_action_type.raw

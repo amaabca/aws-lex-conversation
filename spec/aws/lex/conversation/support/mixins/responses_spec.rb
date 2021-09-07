@@ -18,11 +18,11 @@ describe Aws::Lex::Conversation::Support::Mixins::Responses do
     end
 
     it 'returns a close response' do
-      expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Close')
+      expect(response).to have_action('Close')
     end
 
     it 'returns the message in the response' do
-      expect(response[:messages].first).to eq(
+      expect(response).to have_message(
         content: message.content,
         contentType: message.content_type.raw,
         imageResponseCard: response_card.to_lex
@@ -34,7 +34,7 @@ describe Aws::Lex::Conversation::Support::Mixins::Responses do
     let(:response) { subject.confirm_intent }
 
     it 'returns a ConfirmIntent response' do
-      expect(response.dig(:sessionState, :dialogAction, :type)).to eq('ConfirmIntent')
+      expect(response).to have_action('ConfirmIntent')
     end
   end
 
@@ -42,7 +42,7 @@ describe Aws::Lex::Conversation::Support::Mixins::Responses do
     let(:response) { subject.delegate }
 
     it 'returns a Delegate response' do
-      expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Delegate')
+      expect(response).to have_action('Delegate')
     end
   end
 
@@ -54,11 +54,11 @@ describe Aws::Lex::Conversation::Support::Mixins::Responses do
     end
 
     it 'returns an ElicitIntent repsonse' do
-      expect(response.dig(:sessionState, :dialogAction, :type)).to eq('ElicitIntent')
+      expect(response).to have_action('ElicitIntent')
     end
 
     it 'returns the message in the response' do
-      expect(response[:messages].first).to eq(
+      expect(response).to have_message(
         content: message.content,
         contentType: message.content_type.raw,
         imageResponseCard: response_card.to_lex
@@ -75,15 +75,11 @@ describe Aws::Lex::Conversation::Support::Mixins::Responses do
     end
 
     it 'returns an ElicitSlot response' do
-      expect(response.dig(:sessionState, :dialogAction, :type)).to eq('ElicitSlot')
-    end
-
-    it 'returns the slotToElicit property' do
-      expect(response.dig(:sessionState, :dialogAction, :slotToElicit)).to eq('one')
+      expect(response).to elicit_slot('one')
     end
 
     it 'returns the message in the response' do
-      expect(response[:messages].first).to eq(
+      expect(response).to have_message(
         content: message.content,
         contentType: message.content_type.raw,
         imageResponseCard: response_card.to_lex

@@ -7,9 +7,9 @@ module Aws
         class Context
           include Base
 
-          required :context_attributes
           required :name
           required :time_to_live
+          required :context_attributes, default: -> { {} }
 
           coerce(
             context_attributes: symbolize_hash!,

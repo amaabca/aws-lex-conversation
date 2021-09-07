@@ -20,12 +20,17 @@ Metrics/AbcSize:
   Max: 20
 Metrics/ClassLength:
   Max: 150
+  Exclude:
+    - lib/aws/lex/conversation/simulator.rb
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
     - '*.gemspec'
 Metrics/MethodLength:
   Max: 25
+Metrics/ModuleLength:
+  Exclude:
+    - lib/aws/lex/conversation/spec/matchers.rb
 Naming/FileName:
   Enabled: true
   Exclude:

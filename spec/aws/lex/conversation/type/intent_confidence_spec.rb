@@ -18,7 +18,7 @@ describe Aws::Lex::Conversation::Type::IntentConfidence do
     end
   end
 
-  describe '#ambigouous?' do
+  describe '#ambiguous?' do
     it 'returns true' do
       expect(subject.ambiguous?).to be(true)
     end

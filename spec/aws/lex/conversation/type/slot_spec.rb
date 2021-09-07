@@ -106,6 +106,23 @@ describe Aws::Lex::Conversation::Type::Slot do
     end
   end
 
+  describe '#to_lex' do
+    context 'with a scalar slot shape' do
+      it 'returns the value' do
+        expect(subject.to_lex[:value]).to be_a(Hash)
+      end
+    end
+
+    context 'with a list slot shape' do
+      let(:shape) { build(:slot_shape, :list) }
+      let(:values) { build_list(:slot_value, 2) }
+
+      it 'returns the values' do
+        expect(subject.to_lex[:values].size).to eq(2)
+      end
+    end
+  end
+
   describe '#resolve!' do
     let(:name) { :resolvable }
     let(:value) { build(:slot_value, resolved_values: ['12']) }

@@ -15,7 +15,7 @@ module Aws
           optional :originating_request_id
           optional :nlu_confidence
 
-          computed_property :slots, ->(instance) do
+          computed_property(:slots) do |instance|
             # any keys indexed without a value will return an empty Slot instance
             default_hash = Hash.new do |_hash, key|
               Slot.shrink_wrap(active: false, name: key.to_sym, value: nil, shape: 'Scalar')

@@ -7,14 +7,13 @@ describe Aws::Lex::Conversation::Handler::Echo do
 
   describe '#response' do
     let(:response) { subject.response(conversation) }
-    let(:messages) { response[:messages].map { |m| m[:content] } }
 
     it 'returns a Close response' do
-      expect(response.dig(:sessionState, :dialogAction, :type)).to eq('Close')
+      expect(response).to have_action('Close')
     end
 
     it 'returns a message of the input transcript' do
-      expect(messages).to include(event['inputTranscript'])
+      expect(response).to have_message(content: event['inputTranscript'])
     end
   end
 end

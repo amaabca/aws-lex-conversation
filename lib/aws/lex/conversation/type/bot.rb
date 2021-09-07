@@ -8,6 +8,7 @@ module Aws
           include Base
 
           required :alias_id
+          required :alias_name
           required :id
           required :locale_id
           required :name
