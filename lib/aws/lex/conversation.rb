@@ -91,6 +91,35 @@ module Aws
         lex.session_state.session_attributes.checkpoints
       end
 
+      def active_context?(name:)
+        !active_context(name: name).nil?
+      end
+
+      def active_context(name:)
+        lex.session_state.active_contexts.find { |c| c.name == name }
+      end
+
+      def active_context!(name:, turns: 10, seconds: 300, attributes: {})
+        # look for an existing active context if present
+        instance = active_context(name: name)
+
+        if instance
+          lex.session_state.active_contexts.delete_if { |c| c.name == name }
+        else
+          instance = Type::Context.new
+        end
+
+        # update attributes as requested
+        instance.name = name
+        instance.context_attributes = attributes
+        instance.time_to_live = Type::TimeToLive.new(
+          turns_to_live: turns,
+          time_to_live_in_seconds: seconds
+        )
+        lex.session_state.active_contexts << instance
+        instance
+      end
+
       def stash
         @stash ||= {}
       end

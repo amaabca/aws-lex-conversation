@@ -1,4 +1,4 @@
-# 6.0.0 - Sept 3, 2021
+# 6.0.0 - Sept 7, 2021
 
 * **breaking change** - Modify `Aws::Lex::Conversation::Type::Base#computed_property` to accept a block instead of a callable argument. This is an internal class and should not require any application-level changes.
 * **breaking change** - Add a required `alias_name` attribute on `Aws::Lex::Conversation::Type::Bot` instances. Please note that the Version 2 of AWS Lex correctly returns this value as input to lambda functions. Therefore no application-level changes are necessary.
@@ -55,6 +55,20 @@ it 'creates an event' do
   expect(event).to include_session_values(username: 'jane.doe')
 end
 ```
+* Add a few convenience methods to `Aws::Lex::Conversation` instances for dealing with active contexts:
+  - `#active_context(name:)`:
+
+     Returns the active context instance that matches the name parameter.
+
+  - `#active_context?(name:)`:
+
+     Returns true/false depending on if an active context matching
+     the name parameter is found.
+
+  - `#active_context!(name:, turns:, seconds:, attributes:)`:
+
+     Creates or updates an existing active context instance for
+     the conversation.
 
 # 5.1.0 - Sept 2, 2021
 

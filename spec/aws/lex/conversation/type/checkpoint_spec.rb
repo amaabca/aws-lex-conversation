@@ -117,4 +117,26 @@ describe Aws::Lex::Conversation::Type::Checkpoint do
       end
     end
   end
+
+  describe '#restore!' do
+    subject { build(:checkpoint, :close) }
+
+    before(:each) do
+      conversation.checkpoints << subject
+    end
+
+    it 'deletes the checkpoint from session' do
+      response = subject.restore!(
+        conversation,
+        messages: [
+          {
+            content: 'Test',
+            contentType: 'PlainText'
+          }
+        ]
+      )
+      expect(conversation.checkpoints).to be_empty
+      expect(response).to include_session_values(checkpoints: 'W10')
+    end
+  end
 end
