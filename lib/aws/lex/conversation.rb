@@ -120,6 +120,14 @@ module Aws
         instance
       end
 
+      def clear_context!(name:)
+        lex.session_state.active_contexts.delete_if { |c| c.name == name }
+      end
+
+      def clear_all_contexts!
+        lex.session_state.active_contexts = []
+      end
+
       def stash
         @stash ||= {}
       end
