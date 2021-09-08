@@ -62,6 +62,23 @@ describe Aws::Lex::Conversation do
         expect(instance.time_to_live.turns_to_live).to eq(2)
         expect(instance.context_attributes).to eq(foo: 'bar')
       end
+
+      context 'when we delete said active context' do
+        it 'properly deletes the context' do
+          subject.clear_context!(name: 'test')
+
+          instance = subject.active_context(name: 'test')
+          expect(instance).to be(nil)
+        end
+      end
+
+      context 'when we delete all contexts' do
+        it 'there are no active contexts' do
+          subject.clear_all_contexts!
+          instance = subject.active_context(name: 'test')
+          expect(instance).to be(nil)
+        end
+      end
     end
 
     context 'when an active context does not exist' do

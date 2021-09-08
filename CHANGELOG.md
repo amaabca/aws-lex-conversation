@@ -1,3 +1,11 @@
+# 6.1.0 - Sept 7, 2021
+Added helper methods for clearing active contexts
+```ruby
+conversation.clear_context!(name: 'test') # clears this specific active context
+conversation.clear_all_contexts! # clears all current active contexts
+```
+
+
 # 6.0.0 - Sept 7, 2021
 
 * **breaking change** - Modify `Aws::Lex::Conversation::Type::Base#computed_property` to accept a block instead of a callable argument. This is an internal class and should not require any application-level changes.
