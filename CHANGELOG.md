@@ -1,10 +1,15 @@
+# 6.1.1 - Sept 22, 2021
+
+* renamed `maximum_elicitations` to `max_retries` and made it backwards compatible to make the param name clear, by default this value is zero, allowing each slot to elicit only once
+
 # 6.1.0 - Sept 7, 2021
+
 Added helper methods for clearing active contexts
+
 ```ruby
 conversation.clear_context!(name: 'test') # clears this specific active context
 conversation.clear_all_contexts! # clears all current active contexts
 ```
-
 
 # 6.0.0 - Sept 7, 2021
 
@@ -63,6 +68,7 @@ it 'creates an event' do
   expect(event).to include_session_values(username: 'jane.doe')
 end
 ```
+
 * Add a few convenience methods to `Aws::Lex::Conversation` instances for dealing with active contexts:
   - `#active_context(name:)`:
 
