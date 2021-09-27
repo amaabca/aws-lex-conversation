@@ -62,9 +62,9 @@ module Aws
         label = opts.fetch(:label)
         params = {
           label: label,
-          dialog_action_type: opts.fetch(:dialog_action_type),
+          dialog_action_type: opts.fetch(:dialog_action_type) { 'Delegate' },
           fulfillment_state: opts[:fulfillment_state],
-          intent: lex.current_intent,
+          intent: opts.fetch(:intent) { lex.current_intent },
           slot_to_elicit: opts[:slot_to_elicit]
         }.compact
 
@@ -72,9 +72,8 @@ module Aws
           # update the existing checkpoint
           checkpoint(label: label).assign_attributes!(params)
         else
-          # push a new checkpoint to the recent_intent_summary_view
           checkpoints.unshift(
-            Type::Checkpoint.new(params)
+            Type::Checkpoint.build(params)
           )
         end
       end
@@ -91,6 +90,21 @@ module Aws
         lex.session_state.session_attributes.checkpoints
       end
 
+      def restore_from!(checkpoint)
+        # we're done with the stored checkpoint once it's been restored
+        checkpoints.delete_if { |c| c.label == checkpoint.label }
+        # remove any memoized intent data
+        lex.current_intent = nil
+        # replace the intent with data from the checkpoint
+        lex.session_state.intent = checkpoint.intent
+        dialog_action = Type::DialogAction.new(
+          type: checkpoint.dialog_action_type,
+          slot_to_elicit: checkpoint.slot_to_elicit
+        )
+        lex.session_state.dialog_action = dialog_action
+        self
+      end
+
       def active_context?(name:)
         !active_context(name: name).nil?
       end
@@ -104,7 +118,7 @@ module Aws
         instance = active_context(name: name)
 
         if instance
-          lex.session_state.active_contexts.delete_if { |c| c.name == name }
+          clear_context!(name: name)
         else
           instance = Type::Context.new
         end

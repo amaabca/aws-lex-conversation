@@ -1,3 +1,10 @@
+# 6.2.0 - Sept 28, 2021
+
+* Add a `Aws::Lex::Conversation#restore_from!` method that accepts a checkpoint parameter. This method modifies the underlying conversation state to match the data from the saved checkpoint.
+* Make the `dialog_action_type` parameter on `Aws::Lex::Conversation#checkpoint!` default to `Delegate` if not specified as a developer convenience.
+* Allow developers to pass an optional `intent` override parameter on `Aws::Lex::Conversation#checkpoint!` for convenience.
+* Update the README with advanced examples for the conversation stash and checkpoints.
+
 # 6.1.1 - Sept 22, 2021
 
 * renamed `maximum_elicitations` to `max_retries` and made it backwards compatible to make the param name clear, by default this value is zero, allowing each slot to elicit only once
