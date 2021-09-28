@@ -190,6 +190,31 @@ describe Aws::Lex::Conversation do
     end
   end
 
+  describe '#restore_from!' do
+    let(:checkpoint) { subject.checkpoint(label: 'order_flowers') }
+
+    before(:each) do
+      subject
+        .simulate!
+        .intent(name: 'OrderFlowers')
+        .slot(name: 'Type', value: 'lillies')
+      subject.checkpoint!(label: 'order_flowers')
+      subject
+        .simulate!
+        .intent(name: 'OutroIntent')
+    end
+
+    it 'modifies the intent to match checkpoint data' do
+      expect(subject.intent_name).to eq('OutroIntent')
+      subject.restore_from!(checkpoint)
+      expect(subject.intent_name).to eq('OrderFlowers')
+    end
+
+    it 'returns the conversation instance' do
+      expect(subject.restore_from!(checkpoint)).to eq(subject)
+    end
+  end
+
   describe '#respond' do
     let(:response) { subject.respond }
 

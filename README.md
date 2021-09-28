@@ -191,6 +191,114 @@ conversation.handlers = [
 conversation.respond # => { dialogAction: { type: 'Delegate' } }
 ```
 
+## Advanced Concepts
+
+This library provides a few constructs to help manage complex interactions:
+
+### Data Stash
+
+`Aws::Lex::Conversation` instances implement a `stash` method that can be used to store temporary data within a single invocation.
+
+A conversation's stashed data will not be persisted between multiple invocations of your lambda function.
+
+The conversation stash is a great spot to store deserialized data from the session, or invocation-specific state that needs to be shared between handler classes.
+
+This example illustrates how the stash can be used to store deserialized data from the session:
+
+```ruby
+# given we have JSON-serialized data in as a persisted session value
+conversation.session[:user_data] = '{"name":"Jane","id":1234,"email":"test@example.com"}'
+# we can deserialize the data into a Hash that we store in the conversation stash
+conversation.stash[:user] = JSON.parse(conversation.session[:user_data])
+# later on we can reference our stashed data (within the same invocation)
+conversation.stash[:user] # => {"name"=>"Jane", "id"=>1234, "email"=>"test@example.com"}
+```
+
+### Checkpoints
+
+A conversation may transition between many different topics as the interaction progresses. This type of state transition can be easily handled with checkpoints.
+
+When a checkpoint is created, all intent and slot data is encoded and stored into a `checkpoints` session value. This data persists between invocations, and is not removed until the checkpoint is restored.
+
+You can create a checkpoint as follows:
+
+```ruby
+# we're ready to fulfill the OrderFlowers intent, but we want to elicit another intent first
+conversation.checkpoint!(
+  label: 'order_flowers',
+  dialog_action_type: 'Close' # defaults to 'Delegate' if not specified
+)
+conversation.elicit_intent(
+  messages: [
+    {
+      content: 'Thanks! Before I place your order, is there anything else I can help with?',
+      contentType: 'PlainText'
+    }
+  ]
+)
+```
+
+You can restore the checkpoint in one of two ways:
+
+```ruby
+# in a future invocation, we can fetch an instance of the checkpoint and easily
+# restore the conversation to the previous state
+checkpoint = conversation.checkpoint(label: 'order_flowers')
+checkpoint.restore!(
+  fulfillment_state: 'Fulfilled',
+  messages: [
+    {
+      content: 'Okay, your flowers have been ordered! Thanks!',
+      contentType: 'PlainText'
+    }
+  ]
+) # => our response object to Lex is returned
+```
+
+It's also possible to restore state from a checkpoint and utilize the conversation's handler chain:
+
+```ruby
+class AnotherIntent < Aws::Lex::Conversation::Handler::Base
+  def will_respond?(conversation)
+    conversation.intent_name == 'AnotherIntent' &&
+    conversation.checkpoint?(label: 'order_flowers')
+  end
+
+  def response(conversation)
+    checkpoint = conversation.checkpoint(label: 'order_flowers')
+    # replace the conversation's current resolved intent/slot data with the saved checkpoint data
+    conversation.restore_from!(checkpoint)
+    # call the next handler in the chain to produce a response
+    successor.handle(conversation)
+  end
+end
+
+class OrderFlowers < Aws::Lex::Conversation::Handler::Base
+  def will_respond?(conversation)
+    conversation.intent_name == 'OrderFlowers'
+  end
+
+  def response(conversation)
+    conversation.close(
+      fulfillment_state: 'Fulfilled',
+      messages: [
+        {
+          content: 'Okay, your flowers have been ordered! Thanks!',
+          contentType: 'PlainText'
+        }
+      ]
+    )
+  end
+end
+
+conversation = Aws::Lex::Conversation.new(event: event, context: context)
+conversation.handlers = [
+  { handler: AnotherIntent },
+  { handler: OrderFlowers }
+]
+conversation.respond # => returns a Lex response object
+```
+
 ## Test Helpers
 
 This library provides convenience methods to make testing easy! You can use the test helpers as follows:

@@ -20,6 +20,28 @@ module Aws
             fulfillment_state: FulfillmentState
           )
 
+          class << self
+            def build(opts = {})
+              new(normalize_parameters(opts))
+            end
+
+            private
+
+            def normalize_parameters(opts)
+              params = opts.dup # we don't want to mutate our arguments
+
+              if params[:dialog_action_type].is_a?(String)
+                params[:dialog_action_type] = DialogActionType.new(params[:dialog_action_type])
+              end
+
+              if params[:fulfillment_state].is_a?(String)
+                params[:fulfillment_state] = FulfillmentState.new(params[:fulfillment_state])
+              end
+
+              params
+            end
+          end
+
           # restore the checkpoint AND remove it from session
           def restore!(conversation, opts = {})
             conversation.checkpoints.delete_if { |c| c.label == label }
