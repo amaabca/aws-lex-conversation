@@ -218,7 +218,7 @@ conversation.stash[:user] # => {"name"=>"Jane", "id"=>1234, "email"=>"test@examp
 
 A conversation may transition between many different topics as the interaction progresses. This type of state transition can be easily handled with checkpoints.
 
-When a checkpoint is created, all intent and slot data is encoded and stored into a `checkpoints` session value. This data persist between invocations, and is not removed until the checkpoint is restored.
+When a checkpoint is created, all intent and slot data is encoded and stored into a `checkpoints` session value. This data persists between invocations, and is not removed until the checkpoint is restored.
 
 You can create a checkpoint as follows:
 

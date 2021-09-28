@@ -5,11 +5,6 @@ module Aws
     class Conversation
       module Type
         class Checkpoint
-          ENUM_PARAMS = %i[
-            fulfillment_state
-            dialog_action_type
-          ].freeze
-
           include Base
 
           required :dialog_action_type
