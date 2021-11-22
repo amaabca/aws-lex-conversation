@@ -45,6 +45,8 @@ Style/Lambda:
   EnforcedStyle: literal
 Style/GuardClause:
   Enabled: false
+Style/OpenStructUse:
+  Enabled: false
 Style/RedundantFetchBlock:
   Enabled: false
 Style/SlicingWithRange:
