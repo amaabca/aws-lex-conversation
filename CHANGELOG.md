@@ -1,3 +1,16 @@
+# 6.3.0 - Nov 22, 2021
+
+* Add support for the recently added `slotElicitationStyle` property when generating an `ElicitSlot` repsonse ([documentation](https://docs.aws.amazon.com/lexv2/latest/dg/using-spelling.html)).
+
+You can generate an `ElicitSlot` response now with an optional `slot_elicitation_style` property to allow for spelling support:
+
+```ruby
+conversation.elicit_slot(
+  slot_to_elicit: 'LastName',
+  slot_elicitation_style: 'SpellByWord' # one of Default, SpellByLetter, or SpellByWord
+)
+```
+
 # 6.2.0 - Sept 28, 2021
 
 * Add a `Aws::Lex::Conversation#restore_from!` method that accepts a checkpoint parameter. This method modifies the underlying conversation state to match the data from the saved checkpoint.

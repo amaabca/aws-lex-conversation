@@ -5,7 +5,7 @@ module Aws
     class Conversation
       module Response
         class ElicitSlot < Base
-          attr_accessor :slot_to_elicit
+          attr_accessor :slot_to_elicit, :slot_elicitation_style
 
           def initialize(opts = {})
             super
@@ -16,7 +16,8 @@ module Aws
           def dialog_action
             Aws::Lex::Conversation::Type::DialogAction.shrink_wrap(
               type: 'ElicitSlot',
-              slotToElicit: slot_to_elicit
+              slotToElicit: slot_to_elicit,
+              slotElicitationStyle: slot_elicitation_style
             )
           end
         end
