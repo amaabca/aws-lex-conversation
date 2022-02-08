@@ -17,6 +17,8 @@ module Aws
           required :response_content_type
           required :session_id
           required :session_state
+          required :transcriptions, default: -> { [] }
+          optional :proposed_next_state
 
           computed_property(:current_intent, virtual: true) do |instance|
             instance.session_state.intent.tap do |intent|
@@ -41,9 +43,11 @@ module Aws
             input_mode: InputMode,
             interpretations: Array[Interpretation],
             invocation_source: InvocationSource,
+            proposed_next_state: ProposedNextState,
             request_attributes: symbolize_hash!,
             response_content_type: Message::ContentType,
-            session_state: SessionState
+            session_state: SessionState,
+            transcriptions: Array[Transcription]
           )
         end
       end

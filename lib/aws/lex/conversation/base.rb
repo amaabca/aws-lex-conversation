@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'base64'
+require 'forwardable'
 require 'json'
 require 'shrink/wrap'
 
@@ -36,11 +37,14 @@ require_relative 'type/slot_value'
 require_relative 'type/slot'
 require_relative 'type/context'
 require_relative 'type/intent'
+require_relative 'type/proposed_next_state'
 require_relative 'type/checkpoint'
 require_relative 'type/session_attributes'
 require_relative 'type/session_state'
 require_relative 'type/interpretation'
 require_relative 'type/bot'
+require_relative 'type/transcription/resolved_context'
+require_relative 'type/transcription'
 require_relative 'type/response_card/button'
 require_relative 'type/response_card'
 require_relative 'type/message/content_type'
