@@ -34,6 +34,10 @@ describe Aws::Lex::Conversation::Simulator do
         .slot(name: 'MySlot', value: 'TEST')
         .context(name: 'waffle_is_hot')
         .invocation_source('DialogCodeHook')
+        .transcription(
+          transcription: 'waffle',
+          confidence: 0.45
+        )
     end
 
     it 'sets the transcript' do
@@ -71,6 +75,10 @@ describe Aws::Lex::Conversation::Simulator do
 
     it 'sets the intent state' do
       expect(event).to have_intent_state('InProgress')
+    end
+
+    it 'adds a transcription' do
+      expect(event[:transcriptions].size).to eq(1)
     end
   end
 end

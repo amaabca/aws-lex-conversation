@@ -9,6 +9,7 @@ module Aws
       include Support::Mixins::Responses
 
       attr_accessor :event, :context, :lex
+
       def_delegators :@lex, :proposed_next_state, :transcriptions
 
       def initialize(opts = {})

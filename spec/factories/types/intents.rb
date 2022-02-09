@@ -31,6 +31,7 @@ FactoryBot.define do
       }
     end
     confirmation_state { Aws::Lex::Conversation::Type::ConfirmationState.new('None') }
+    state { 'InProgress' }
 
     initialize_with do
       new(

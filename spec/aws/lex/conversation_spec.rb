@@ -340,4 +340,27 @@ describe Aws::Lex::Conversation do
       expect(subject.stash[:my_thing]).to eq(thing)
     end
   end
+
+  describe '#proposed_next_state?' do
+    context 'when a proposed_next_state is present' do
+      before(:each) do
+        subject
+          .simulate!
+          .proposed_next_state(
+            dialog_action: build(:dialog_action),
+            intent: build(:current_intent)
+          )
+      end
+
+      it 'returns true' do
+        expect(subject.proposed_next_state?).to be(true)
+      end
+    end
+
+    context 'when a proposed_next_state is not present' do
+      it 'returns false' do
+        expect(subject.proposed_next_state?).to be(false)
+      end
+    end
+  end
 end
