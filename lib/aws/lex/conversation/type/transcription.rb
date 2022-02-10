@@ -15,7 +15,11 @@ module Aws
 
           coerce(
             resolved_context: Transcription::ResolvedContext,
-            resolved_slots: Array[Slot]
+            resolved_slots: ->(slots) do
+              slots.each_with_object({}) do |(name, data), hash|
+                hash[name.to_sym] = Slot.shrink_wrap(data)
+              end
+            end
           )
         end
       end
