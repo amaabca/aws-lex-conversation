@@ -5,9 +5,12 @@ require_relative 'conversation/base'
 module Aws
   module Lex
     class Conversation
+      extend Forwardable
       include Support::Mixins::Responses
 
       attr_accessor :event, :context, :lex
+
+      def_delegators :@lex, :proposed_next_state, :transcriptions
 
       def initialize(opts = {})
         self.event = opts.fetch(:event)
@@ -140,6 +143,10 @@ module Aws
 
       def clear_all_contexts!
         lex.session_state.active_contexts = []
+      end
+
+      def proposed_next_state?
+        !proposed_next_state.nil?
       end
 
       def stash

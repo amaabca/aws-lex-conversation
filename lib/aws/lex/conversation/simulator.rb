@@ -120,12 +120,40 @@ module Aws
           self
         end
 
+        def proposed_next_state(opts = {})
+          data = {
+            dialogAction: lex_attributes(opts.fetch(:dialog_action)),
+            intent: lex_attributes(opts.fetch(:intent))
+          }
+          lex.proposed_next_state = Type::ProposedNextState.shrink_wrap(data)
+          self
+        end
+
         def session(data)
           lex.session_state.session_attributes.merge!(Type::SessionAttributes[data])
           self
         end
 
+        def transcription(opts = {})
+          data = {
+            transcription: opts.fetch(:transcription),
+            transcriptionConfidence: opts.fetch(:confidence, 1),
+            resolvedContext: {
+              intent: opts.fetch(:intent) { 'FallbackIntent' }
+            },
+            resolvedSlots: opts.fetch(:resolved_slots) { {} }
+          }
+          lex.transcriptions.push(Type::Transcription.shrink_wrap(data))
+          self
+        end
+
         private
+
+        def lex_attributes(instance)
+          return instance unless instance.respond_to?(:to_lex)
+
+          instance.to_lex
+        end
 
         def current_interpretation
           lex.interpretations.find { |i| i.intent.name == lex.session_state.intent.name }
