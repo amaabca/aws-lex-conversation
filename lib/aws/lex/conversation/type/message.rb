@@ -15,6 +15,11 @@ module Aws
             content_type: Message::ContentType,
             image_response_card: Aws::Lex::Conversation::Type::ResponseCard
           )
+
+          def initialize(opts = {})
+            assign_attributes!(opts)
+            self.content_type ||= ContentType.new('PlainText')
+          end
         end
       end
     end

@@ -9,8 +9,8 @@ module Aws
 
           required :transcription
           required :transcription_confidence
-          required :resolved_context
-          required :resolved_slots
+          optional :resolved_context
+          optional :resolved_slots
           alias_method :confidence, :transcription_confidence
 
           coerce(

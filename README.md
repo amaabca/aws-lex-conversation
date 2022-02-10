@@ -1,19 +1,15 @@
-# Aws::Lex::Conversation
+# `Aws::Lex::Conversation`
 
-Have you played around with [AWS Lex](https://aws.amazon.com/lex/) and quickly realized you were duplicating code to read and generate the [Lex Lambda input event and response format](https://docs.aws.amazon.com/lex/latest/dg/lambda-input-response-format.html)?
+Building a chatbot with [AWS Lex](https://aws.amazon.com/lex/) is really fun! Unfortunately implementing your bot's behaviour with the [Lex/Lambda event protocol](https://docs.aws.amazon.com/lexv2/latest/dg/lambda.html) is less fun.
 
-`Aws::Lex::Conversation` provides a mechanism to define the flow of a Lex conversation with a user easily!
+But don't worry - we've done the hard work for you!
+
+`Aws::Lex::Conversation` makes it simple to build dynamic, conversational chatbots with AWS Lex and AWS Lambda!
 
 ## Installation
 
-### Lex V1
-
-Version 3.x is the last major version of this gem that will support Lex V1.
-
-Add this line to your application's Gemfile:
-
 ```ruby
-gem 'aws-lex-conversation', '~> 3.0'
+gem 'aws-lex-conversation'
 ```
 
 And then execute:
@@ -22,96 +18,162 @@ And then execute:
 bundle install
 ```
 
-### Lex V2
+**Please Note:** This library currently supports [AWS Lex Version 2](https://docs.aws.amazon.com/lexv2/latest/dg/lambda.html). If you're looking for Lex V1 support, lock `aws-lex-conversation` to `~> 3.0` in your `Gemfile`.
 
-Version 4.x and higher support Lex V2.
+## Core Concepts
 
-Add this line to your application's Gemfile:
+### The Conversation Instance
 
-```ruby
-gem 'aws-lex-conversation', '>= 4.0'
-```
+Instances of `Aws::Lex::Conversation` wrap the Lex input/output event format and make it easy to manage conversation dialog.
 
-And then execute:
+Imagine you have a `ButlerBot` configured with a `ServeBreakfast` intent and `BreakfastFood` slot.
 
-```bash
-bundle install
-```
-
-## Usage
-
-At a high level, you must create a new instance of `Aws::Lex::Conversation`.
-
-Generally the conversation instance will be initialized inside your Lambda handler method as follows:
+The backing lambda handler for your bot might look something like:
 
 ```ruby
-def my_lambda_handler(event:, context:)
+require "aws-lex-conversation"
+
+def lambda_handler(event:, context:)
+  # The conversation instance validates and wraps the Lex input event
   conversation = Aws::Lex::Conversation.new(event: event, context: context)
 
-  # define a chain of your own Handler classes
+  # Return a Close dialog action to our Lex bot to end the conversation
+  conversation.close(
+    fulfillment_state: "Fulfilled",
+    messages: [
+      # We can construct response messages using wrapper classes.
+      Aws::Lex::Conversation::Type::Message.new(
+        content: "Hi - I'm a 🤖!"
+      ),
+      # Or we can pass a Hash that directly maps to the Lex response format
+      {
+        content: "Your intent is: #{conversation.intent_name}",
+        contentType: "PlainText"
+      },
+      {
+        content: "Here's your #{conversation.slots[:BreakfastFood].value}!",
+        contentType: "PlainText"
+      }
+    ]
+  )
+end
+```
+
+This lambda handler would generate the following dialog:
+
+![ButlerBot Dialog](https://raw.github.com/amaabca/aws-lex-conversation/transcriptions/data/butler_bot.png height=200)
+
+All data from the Lex input event is exposed via the `lex` attribute. By convention, the `lex` attribute directly translates input event attributes from `camelCase` to `snake_case`.
+
+We also provide some helpers to help manage the conversation. For example:
+
+```ruby
+# returns true if the lambda function was invoked as a DialogCodeHook
+conversation.lex.invocation_source.dialog_code_hook?
+
+# returns true if the InputMode is Speech
+conversation.lex.input_mode.speech?
+
+# you can easily set or retrieve a session values
+conversation.session[:name] = "Jane"
+conversation.session[:name] # => "Jane"
+
+# dealing with slot data is simple
+conversation.slots[:BreakfastFood].filled? # returns true if a slot value is present
+conversation.slots[:Hometown].blank?       # returns true if a slot value is nil/empty
+conversation.slots[:FirstName].value       # => "John"
+```
+
+### The Handler Chain
+
+Conversational dialog gets complex quickly! Conversation instances include a handler chain that can help manage this complexity.
+
+Each handler in the chain defines the prerequisites necessary for the handler to generate a response.
+
+You can configure the handler chain as follows:
+
+```ruby
+def lambda_handler(event:, context:)
+  conversation = Aws::Lex::Conversation.new(event: event, context: context)
+
   conversation.handlers = [
+    # You need to define custom handler classes yourself
+    { handler: ServeBreakfast },
+    { handler: FallbackIntent },
+    # We offer a few "built in" handlers
     {
       handler: Aws::Lex::Conversation::Handler::Delegate,
       options: {
-        respond_on: ->(conversation) { conversation.current_intent.name == 'MyIntent' }
+        # If we get this far, always return a Delegate action
+        respond_on: ->(_) { true }
       }
     }
   ]
 
-  # return a response object to indicate Lex's next action
+  # The respond method will execute each handler sequentially and return a Lex response
   conversation.respond
 end
 ```
 
-Any custom behaviour in your flow is achieved by defining a Handler class. Handler classes must provide the following:
+### Writing Your Own Handler
+
+Generally, custom behaviour in your flow is achieved by defining your own handler class. Handler classes must:
 
 1. Inherit from `Aws::Lex::Conversation::Handler::Base`.
 2. Define a `will_respond?(conversation)` method that returns a boolean value.
 3. Define a `response(conversation)` method to return final response to Lex. This method is called if `will_respond?` returns `true`.
 
-The handlers defined on an `Aws::Lex::Conversation` instance will be called one-by-one in the order defined.
+Handlers in the chain are invoked sequentially in the order defined.
 
-The first handler that returns `true` for the `will_respond?` method will provide the final Lex response action.
+The first handler in the chain that returns `true` for the `will_respond?` method will provide the final Lex response action.
 
-### Custom Handler Example
+Here's an example for the `ServeBreakfast` and `FallbackIntent` handlers above:
 
 ```ruby
-class SayHello < Aws::Lex::Conversation::Handler::Base
+class ServeBreakfast < Aws::Lex::Conversation::Handler::Base
   def will_respond?(conversation)
-    conversation.lex.invocation_source.dialog_code_hook? && # callback is for DialogCodeHook (i.e. validation)
-    conversation.lex.current_intent.name == 'SayHello' &&   # Lex has routed to the 'SayHello' intent
-    conversation.slots[:name].filled?                       # our expected slot value is set
+    conversation.intent_name == "ServeBreakfast" &&   
+    conversation.slots[:BreakfastFood].filled?                      
   end
 
   def response(conversation)
-    name = conversation.slots[:name].value
+    food = conversation.slots[:BreakfastFood].value
+    emoji = food == "waffle" ? "🧇" : "🥓"
 
-    # NOTE: you can use the Type::* classes if you wish. The final output
-    # will be normalized to a value that complies with the Lex response format.
-    #
-    # You can also specify raw values for the response:
-    #
-    # conversation.close(
-    #   fulfillment_state: 'Fulfilled',
-    #   messages: [{ content: "Hello, #{name}!", contentType: 'PlainText' }]
-    # )
-    #
     conversation.close(
-      fulfillment_state: Aws::Lex::Conversation::Type::FulfillmentState.new('Fulfilled'),
+      fulfillment_state: "Fulfilled",
       messages: [
-        Aws::Lex::Conversation::Type::Message.new(
-          content: "Hello, #{name}!",
-          content_type: Aws::Lex::Conversation::Type::Message::ContentType.new('PlainText')
-        )
+        {
+          content: "Here's your #{emoji}!",
+          contentType: "PlainText"
+        }
+      ]
+    )
+  end
+end
+
+class FallbackIntent < Aws::Lex::Conversation::Handler::Base
+  def will_respond?(conversation)
+    conversation.intent_name == "FallbackIntent"
+  end
+
+  def response(conversation)
+    conversation.close(
+      fulfillment_state: 'Failed',
+      messages: [
+        {
+          content: "Sorry - I'm not sure what you said!",
+          contentType: "PlainText"
+        }
       ]
     )
   end
 end
 ```
 
-## Built-In Handlers
+### Built-In Handlers
 
-### `Aws::Lex::Conversation::Handler::Echo`
+#### `Aws::Lex::Conversation::Handler::Echo`
 
 This handler simply returns a close response with a message that matches the `inputTranscript` property of the input event.
 
@@ -140,7 +202,7 @@ conversation.handlers = [
 conversation.respond # => { dialogAction: { type: 'Close' } ... }
 ```
 
-### `Aws::Lex::Conversation::Handler::Delegate`
+#### `Aws::Lex::Conversation::Handler::Delegate`
 
 This handler returns a `Delegate` response to the Lex bot (i.e. "do the next bot action").
 
@@ -163,7 +225,7 @@ conversation.handlers = [
 conversation.respond # => { dialogAction: { type: 'Delegate' } }
 ```
 
-### `Aws::Lex::Conversation::Handler::SlotResolution`
+#### `Aws::Lex::Conversation::Handler::SlotResolution`
 
 This handler will set all slot values equal to their top resolution in the input event. The handler then calls the next handler in the chain for a response.
 
@@ -359,8 +421,6 @@ end
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/amaabca/aws-lex-conversation. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/amaabca/aws-lex-conversation/blob/master/CODE_OF_CONDUCT.md).
@@ -371,4 +431,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Aws::Lex::Conversation project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/amaabca/aws-lex-conversation/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the `Aws::Lex::Conversation` project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/amaabca/aws-lex-conversation/blob/master/CODE_OF_CONDUCT.md).
