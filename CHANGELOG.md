@@ -1,10 +1,11 @@
-# 6.4.0 - Feb 9, 2022
+# 6.4.0 - Feb 10, 2022
 
 * Add support for the new protocol properties of `proposedNextState` and `transcriptions`. This enables support for [transcription confidence scores](https://docs.aws.amazon.com/lexv2/latest/dg/using-transcript-confidence-scores.html).
 * Expose the following methods on `Aws::Lex::Conversation` instances:
   - `proposed_next_state?`: Returns `true` if a `proposedNextState` value is present or `false` otherwise.
   - `proposed_next_state`: Returns an `Aws::Lex::Conversation::Type::ProposedNextState` instance. May return `nil`.
   - `transcriptions`: Returns an array of `Aws::Lex::Conversation::Type::Transcription` instances. Defaults to a empty array if the `transcriptions` property is not present.
+* Make the `content_type` attribute in the constructor for `Aws::Lex::Conversation::Type::Message` default to `PlainText` when not present.
 
 # 6.3.0 - Nov 22, 2021
 

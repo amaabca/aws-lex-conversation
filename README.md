@@ -37,7 +37,7 @@ def lambda_handler(event:, context:)
   # The conversation instance validates and wraps the Lex input event
   conversation = Aws::Lex::Conversation.new(event: event, context: context)
 
-  # Return a Close dialog action to our Lex bot to end the conversation
+  # Return a Close dialog action to our Lex bot and end the conversation
   conversation.close(
     fulfillment_state: "Fulfilled",
     messages: [
@@ -61,7 +61,7 @@ end
 
 This lambda handler would generate the following dialog:
 
-![ButlerBot Dialog](https://raw.github.com/amaabca/aws-lex-conversation/transcriptions/data/butler_bot.png height=200)
+![ButlerBot Dialog](https://raw.github.com/amaabca/aws-lex-conversation/master/data/butler_bot.png)
 
 All data from the Lex input event is exposed via the `lex` attribute. By convention, the `lex` attribute directly translates input event attributes from `camelCase` to `snake_case`.
 
