@@ -157,6 +157,26 @@
     },
     "originatingRequestId": "d6349818-c9a1-463e-b8e6-7fcdc5169b71"
   },
+  "transcriptions": [
+    {
+      "transcription": "yes",
+      "transcriptionConfidence": 1,
+      "resolvedContext": {
+        "intent": "Lex_V2_Intent_A"
+      },
+      "resolvedSlots": {
+        "HasACat": {
+          "shape": "Scalar",
+          "value": {
+            "originalValue": "yes",
+            "resolvedValues": [
+              "YES"
+            ]
+          }
+        }
+      }
+    }
+  ],
   "inputMode": "Text",
   "bot": {
     "aliasName": "TestBotAlias",

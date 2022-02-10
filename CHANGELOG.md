@@ -1,3 +1,9 @@
+# 6.4.1 - Feb 10, 2022
+
+* There was a bug with the way we were building the structure for the `resolved_slots` with the recent release of transcription confidence scores in 6.4.0.
+* The bug would result in an `ArgumentError` being raised during the input event validation phase when creating a conversation instance.
+* To resolve this bug, we now correctly coerce the `resolved_slots` value as a Hash.
+
 # 6.4.0 - Feb 10, 2022
 
 * Add support for the new protocol properties of `proposedNextState` and `transcriptions`. This enables support for [transcription confidence scores](https://docs.aws.amazon.com/lexv2/latest/dg/using-transcript-confidence-scores.html).
