@@ -8,7 +8,7 @@ module Aws
           class ResolvedContext
             include Base
 
-            required :intent
+            optional :intent
           end
         end
       end

@@ -26,7 +26,7 @@ module Aws
             end
           end
 
-          computed_property(:intents, virutal: true) do |instance|
+          computed_property(:intents, virtual: true) do |instance|
             instance.interpretations.map(&:intent).tap do |intents|
               intents.map do |intent|
                 intent.nlu_confidence = instance.interpretations.find { |i| i.intent.name == intent.name }&.nlu_confidence
