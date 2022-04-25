@@ -175,6 +175,11 @@
           }
         }
       }
+    },
+    {
+      "transcription": "I don't know",
+      "transcriptionConfidence": 0,
+      "resolvedContext": {}
     }
   ],
   "inputMode": "Text",
